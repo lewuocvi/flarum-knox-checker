@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of lewuocvi/knoxextchecker.
+ * This file is part of lewuocvi/knox-policy-checker.
  *
  * Copyright (c) 2024 lewuocvi.
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Samsungssl\KnoxExtChecker;
+namespace Samsungssl\KnoxPolicyChecker;
 
 use Flarum\Extend;
 
