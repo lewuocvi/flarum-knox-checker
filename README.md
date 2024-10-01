@@ -1,4 +1,4 @@
-# KnoxPolicyChecker
+# Flarum Knox Checker
 
 ![License](https://img.shields.io/badge/license-GPL-1.0-or-later-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/lewuocvi/flarum-knox-checker.svg)](https://packagist.org/packages/lewuocvi/flarum-knox-checker) [![Total Downloads](https://img.shields.io/packagist/dt/lewuocvi/flarum-knox-checker.svg)](https://packagist.org/packages/lewuocvi/flarum-knox-checker)
 
