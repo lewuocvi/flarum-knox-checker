@@ -1,5 +1,5 @@
 {
-    "name": "lewuocvi/knox-policy-checker",
+    "name": "lewuocvi/flarum-knox-checker",
     "keywords": [
         "flarum"
     ],
@@ -17,12 +17,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Samsungssl\\KnoxPolicyChecker\\": "src/"
+            "Samsungssl\\KnoxChecker\\": "src/"
         }
     },
     "extra": {
         "flarum-extension": {
-            "title": "KnoxPolicyChecker",
+            "title": "knox checker",
             "category": "feature",
             "icon": {
                 "name": "fa fa-check",
