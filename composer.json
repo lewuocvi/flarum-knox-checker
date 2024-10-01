@@ -22,7 +22,7 @@
     },
     "extra": {
         "flarum-extension": {
-            "title": "knox checker",
+            "title": "KnoxChecker",
             "category": "feature",
             "icon": {
                 "name": "fa fa-check",
