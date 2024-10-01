@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Samsungssl\\KnoxExtChecker;
+namespace Samsungssl\KnoxExtChecker;
 
 use Flarum\Extend;
 
