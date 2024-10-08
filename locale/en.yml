@@ -1,7 +1,27 @@
 lewuocvi-knoxextchecker:
-  # For more details on the format
-  # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
   admin:
     my_cool_key: My Cool Key
 
   forum:
+    page_title: Check knox samsung | check knox policy | samsung knox guard
+    page_description: Check Knox Samsung information using IMEI, review installment debt status and Samsung warranty period, as well as Care+ contract details.
+    title: Check Knox Samsung with IMEI
+    knox_result: Knox check result
+    imei_input: IMEI with 15 digits | example 357301902793356
+    check_button: Check Now
+    option_knox_warranty_care: "KNOX INFO + WARRANTY INFO + CARE+ INFO"
+    option_warranty: "WARRANTY INFO"
+    option_careplus: "CARE+ INFO"
+    knox_status: Knox Status
+    company_name: Company Name
+    device_status: Device Status
+    registered_knox: Yes (Registered Knox)
+    unregistered_knox: No (Unregistered Knox)
+    notification_message: Notification
+    error_title: An error has occurred
+
+  api:
+    error_guest: "You need to log in to check the IMEI."
+    error_invalid_imei: "Invalid IMEI. Please enter again."
+    error_invalid_info: "Invalid information. Please check again."
+    error_server_connection: "Error connecting to the server. Please try again later."

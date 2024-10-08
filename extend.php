@@ -12,13 +12,17 @@
 namespace Samsungssl\KnoxChecker;
 
 use Flarum\Extend;
+use Samsungssl\KnoxChecker\Api\Controllers\CheckImeiController;
 
 return [
-    (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/less/forum.less'),
-    (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/less/admin.less'),
-    new Extend\Locales(__DIR__.'/locale'),
+
+    new Extend\Locales(__DIR__ . '/locale'),
+    (new Extend\Frontend('forum'))->js(__DIR__ . '/js/dist/forum.js')->css(__DIR__ . '/less/forum.less'),
+    (new Extend\Frontend('admin'))->js(__DIR__ . '/js/dist/admin.js')->css(__DIR__ . '/less/admin.less'),
+
+    (new Extend\Frontend('forum'))->route('/knox-checker', 'knox_checker'),
+    // (new Extend\Frontend('forum'))->route('/deposit-money', 'deposit_money'),
+    // (new Extend\Frontend('forum'))->route('/check-balance', 'check_balance'),
+    // (new Extend\Frontend('forum'))->route('/checker-history', 'checker_history'),
+    (new Extend\Routes('api'))->post('/knox-checker', 'api_knox_checker', CheckImeiController::class),
 ];

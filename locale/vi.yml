@@ -1,0 +1,27 @@
+lewuocvi-knoxextchecker:
+  admin:
+    my_cool_key: My Cool Key
+
+  forum:
+    page_title: Check knox samsung | Tra bảo hành | Thông tin care+
+    page_description: Kiểm tra thông tin Knox Samsung bằng số IMEI, kiểm tra tình trạng nợ trả góp và thời hạn bảo hành Samsung Việt Nam, cũng như thông tin hợp đồng Care+.
+    title: Kiểm Tra Knox Samsung Qua Số IMEI
+    knox_result: Kết quả kiểm tra knox
+    imei_input: IMEI có 15 ký tự | ví dụ 357301902793356
+    check_button: Kiểm Tra
+    option_knox_warranty_care: "THÔNG TIN KNOX + THÔNG TIN BẢO HÀNH + THÔNG TIN CARE+"
+    option_warranty: "THÔNG TIN BẢO HÀNH"
+    option_careplus: "THÔNG TIN CARE+"
+    knox_status: Trạng thái knox
+    company_name: Tên công ty
+    device_status: Trạng thái thiết bị
+    registered_knox: Có (Đã đăng ký Knox)
+    unregistered_knox: Không có (Không đăng ký knox)
+    notification_message: Thông báo
+    error_title: Đã xảy ra lỗi
+
+  api:
+    error_guest: "Bạn cần đăng nhập để kiểm tra IMEI."
+    error_invalid_imei: "IMEI không hợp lệ. Vui lòng nhập lại."
+    error_invalid_info: "Thông tin không hợp lệ. Vui lòng kiểm tra lại."
+    error_server_connection: "Lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau."
