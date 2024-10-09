@@ -1,6 +1,6 @@
 <?php
 
-namespace Samsungssl\KnoxChecker\Api\Controllers;
+namespace Samsungssl\KnoxChecker\Api\Controller;
 
 use Flarum\User\Guest;
 use GuzzleHttp\Client;
@@ -36,6 +36,12 @@ class CheckImeiController implements RequestHandlerInterface
         }
     }
 
+    private function errorResponse(string $messageKey): JsonResponse
+    {
+        $message = app('translator')->trans($messageKey);
+        return new JsonResponse(['status' => 'error', 'message' => $message]);
+    }
+
     private function isValidImei(?string $imei): bool
     {
         return $imei !== null && strlen($imei) === 15 && ctype_digit($imei);
@@ -47,10 +53,10 @@ class CheckImeiController implements RequestHandlerInterface
 
         try {
             $identifier = base64_encode($email . ':' . $userId);
-            $response = $client->post('https://samsungssl.com/flarum/knox-checker', [
+            $response = $client->post('https://samsungssl.com/extension/knox-checker', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'flarum-connector-identifier' => $identifier
+                    'flarum-connector-identifier' => $identifier,
                 ],
                 'json' => [
                     'imei' => $imei,
@@ -62,11 +68,5 @@ class CheckImeiController implements RequestHandlerInterface
         } catch (RequestException $e) {
             throw new \Exception(app('translator')->trans('lewuocvi-knoxextchecker.api.error_server_connection'));
         }
-    }
-
-    private function errorResponse(string $messageKey): JsonResponse
-    {
-        $message = app('translator')->trans($messageKey);
-        return new JsonResponse(['status' => 'error', 'message' => $message]);
     }
 }

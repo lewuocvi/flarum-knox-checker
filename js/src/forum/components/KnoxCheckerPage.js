@@ -32,6 +32,14 @@ export default class CheckImeiPage extends Page {
         metaTag.content = content;
     }
 
+    clearPage(e) {
+        e.preventDefault();
+        this.imei('');
+        this.result(null);
+        this.loading(false);
+        m.redraw();
+    }
+
     view() {
         return (
             <div className="CheckImeiPage">
@@ -93,6 +101,9 @@ export default class CheckImeiPage extends Page {
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    <div className='clearPage'>
+                                                        <a href="javascript:void(0)" onclick={this.clearPage.bind(this)}>{app.translator.trans('lewuocvi-knoxextchecker.forum.clear_page')}</a>
+                                                    </div>
                                                 </div>
                                             )
                                         }

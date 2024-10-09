@@ -19,6 +19,44 @@ lewuocvi-knoxextchecker:
     unregistered_knox: Không có (Không đăng ký knox)
     notification_message: Thông báo
     error_title: Đã xảy ra lỗi
+    clear_page: Kiểm tra imei khác
+
+    user_page_title: Thông tin chi tiết về tài khoản người dùng
+    user_page_description: Trang hiển thị thông tin chi tiết về tài khoản người dùng, bao gồm số dư hiện tại, tổng số tiền đã nạp, số tiền đã chi tiêu và số tiền còn lại trong tài khoản.
+    user_profile: Thông tin tài khoản
+    name: Tên tài khoản
+    email: email
+    user_id: Mã định danh tài khoản
+    created_at: Thời gian đăng ký
+    updated_at: Thời gian cập nhật
+    no_user_data: Không có thông tin người dùng này
+    error_loading_user_data: Lỗi truy vấn thông tin người dùng
+    not_logged_in: Chưa đăng nhập
+
+    wallet_info: Thông tin tài khoản tiền ảo
+    wallet_id: Số tài khoản tiền ảo
+    total_deposited: Tổng số tiền đã nạp
+    total_used: Tổng số tiền đã sử dụng
+    balance: Số tiền có thể sử dụng
+    wallet_created_at: Thời gian tạo
+    wallet_updated_at: Thời gian cập nhật
+    deposit_button: Nạp tiền
+
+    deposit_title: Nạp tiền vào tài khoản
+    deposit_amount_input: Số tiền nạp
+    deposit_amount: Số tiền
+    generate_qr_button: Tạo mã QR
+    qr_generation_success: Tạo mã QR thành công
+    qr_code_title: Mã QR Chuyển tiền qua ngân hàng
+    deposit_content: Nội dung chuyển khoản
+
+    qr_generation_error: Gặp lỗi khi tạo mã QR
+
+    deposit_history_title: Lịch sử giao dịch nạp tiền vào tài khoản
+    no_deposit_history: Không có giao dịch
+    deposit_history_date: Thời gian
+    deposit_history_amount: Số tiền
+    deposit_history_detail: Chi tiết
 
   api:
     error_guest: "Bạn cần đăng nhập để kiểm tra IMEI."

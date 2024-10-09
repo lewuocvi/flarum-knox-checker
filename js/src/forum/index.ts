@@ -1,10 +1,11 @@
 import app from 'flarum/forum/app';
-import CustomPage from './components/CustomPage';
+
+import knoxCheckerPage from './components/KnoxCheckerPage';
+import userPage from './components/UserPage';
+import depositPage from './components/DepositPage';
 
 app.initializers.add('lewuocvi/flarum-knox-checker', () => {
-    // Đăng ký route mới
-    app.routes['knox-checker'] = { path: '/knox-checker', component: CustomPage };
-    app.routes['deposit-money'] = { path: '/deposit-money', component: CustomPage };
-    app.routes['check-balance'] = { path: '/money-balance', component: CustomPage };
-    app.routes['checker-history'] = { path: '/checker-history', component: CustomPage };
+    app.routes['knox-checker-page'] = { path: '/knox-checker', component: knoxCheckerPage };
+    app.routes['knox-checker/user-page'] = { path: '/knox-checker/user', component: userPage };
+    app.routes['knox-checker/deposit-page'] = { path: '/knox-checker/deposit', component: depositPage };
 });

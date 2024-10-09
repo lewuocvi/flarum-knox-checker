@@ -12,7 +12,6 @@
 namespace Samsungssl\KnoxChecker;
 
 use Flarum\Extend;
-use Samsungssl\KnoxChecker\Api\Controllers\CheckImeiController;
 
 return [
 
@@ -20,9 +19,13 @@ return [
     (new Extend\Frontend('forum'))->js(__DIR__ . '/js/dist/forum.js')->css(__DIR__ . '/less/forum.less'),
     (new Extend\Frontend('admin'))->js(__DIR__ . '/js/dist/admin.js')->css(__DIR__ . '/less/admin.less'),
 
-    (new Extend\Frontend('forum'))->route('/knox-checker', 'knox_checker'),
-    // (new Extend\Frontend('forum'))->route('/deposit-money', 'deposit_money'),
-    // (new Extend\Frontend('forum'))->route('/check-balance', 'check_balance'),
-    // (new Extend\Frontend('forum'))->route('/checker-history', 'checker_history'),
-    (new Extend\Routes('api'))->post('/knox-checker', 'api_knox_checker', CheckImeiController::class),
+    (new Extend\Frontend('forum'))
+        ->route('/knox-checker', 'knox_checker')
+        ->route('/knox-checker/deposit', 'knox_checker:deposit')
+        ->route('/knox-checker/user', 'knox_checker:user'),
+
+    (new Extend\Routes('api'))
+        ->post('/knox-checker', 'api_knox_checker', \Samsungssl\KnoxChecker\Api\Controller\CheckImeiController::class)
+        ->post('/knox-checker/user', 'api_knox_checker:user', \Samsungssl\KnoxChecker\Api\Controller\UserController::class)
+        ->post('/knox-checker/deposit', 'api_knox_checker:deposit_post', \Samsungssl\KnoxChecker\Api\Controller\DepositController::class),
 ];
