@@ -6,10 +6,9 @@ import LoadingIndicator from 'flarum/components/LoadingIndicator';
 export default class CheckImeiPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
-        this.imei = Stream('357301902793356');
+        this.imei = Stream('357301902793356'); //357301902793356
         this.result = Stream(null);
         this.loading = Stream(false);
-        this.selectedOption = Stream('KnoxPolicy+WarantyVN+CarePlusVN');
     }
 
     oncreate(vnode) {
@@ -54,7 +53,7 @@ export default class CheckImeiPage extends Page {
                     {
                         this.result() === null && (
                             <div className="containerForm">
-                                <h1>{app.translator.trans('lewuocvi-knoxextchecker.forum.title')}</h1>
+                                <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.title')}</h2>
                                 <form onsubmit={this.checkImei.bind(this)} className="ImeiForm">
                                     <div className='FormMainGroup'>
                                         <div className="FormGroup">
@@ -76,7 +75,7 @@ export default class CheckImeiPage extends Page {
                                         {
                                             this.result().status === 'success' && (
                                                 <div className='ResultSuccess'>
-                                                    <h3>{app.translator.trans('lewuocvi-knoxextchecker.forum.knox_result')}</h3>
+                                                    <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.knox_result_title')}</h2>
                                                     <table className="ResultTable">
                                                         <tbody>
                                                             <tr>
@@ -96,8 +95,7 @@ export default class CheckImeiPage extends Page {
                                                                 </tr>)
                                                             }
                                                             <tr>
-                                                                <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.notification_message')}:</td>
-                                                                <td>{this.result().message}</td>
+                                                                <td colSpan="2">{this.result().message}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -112,7 +110,7 @@ export default class CheckImeiPage extends Page {
                                     {
                                         this.result().status === 'error' && (
                                             <div className='ResultError'>
-                                                <h3>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h3>
+                                                <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h2>
                                                 <p>{this.result().message}</p>
                                             </div>
                                         )

@@ -80,7 +80,7 @@ export default class UserPage extends Page {
         return (
             <div className="UserPage">
                 <div className="container">
-                    <h1>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_page_title')}</h1>
+                    <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_page_title')}</h2>
                     <div className="UserInfo">
                         <table className="UserDetails">
                             <thead>

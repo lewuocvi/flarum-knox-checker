@@ -92,8 +92,8 @@ export default class DepositPage extends Page {
 
                         {this.deposit().qrcode_url && (
                             <div className="QRCodeContainer">
-                                <h3>{app.translator.trans('lewuocvi-knoxextchecker.forum.qr_code_title')}</h3>
                                 <img src={this.deposit().qrcode_url} alt="QR Code for deposit" />
+                                <h4>{app.translator.trans('lewuocvi-knoxextchecker.forum.qr_code_title')}</h4>
                                 <div className='DepositContainer'>
                                     <p className="DepositContent">
                                         {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_content')}: {this.deposit().content}

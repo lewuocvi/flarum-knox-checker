@@ -42,11 +42,11 @@ class UserController implements RequestHandlerInterface
                 ],
                 'json' => [
                     'email' => $email,
+                    'user_id' => $userId,
                 ],
             ]);
 
             return json_decode($response->getBody()->getContents(), true);
-
         } catch (RequestException $e) {
             throw new \Exception(app('translator')->trans('lewuocvi-knoxextchecker.api.error_server_connection'));
         }

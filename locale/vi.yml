@@ -6,7 +6,7 @@ lewuocvi-knoxextchecker:
     page_title: Check knox samsung | Tra bảo hành | Thông tin care+
     page_description: Kiểm tra thông tin Knox Samsung bằng số IMEI, kiểm tra tình trạng nợ trả góp và thời hạn bảo hành Samsung Việt Nam, cũng như thông tin hợp đồng Care+.
     title: Kiểm Tra Knox Samsung Qua Số IMEI
-    knox_result: Kết quả kiểm tra knox
+    knox_result_title: Kết quả kiểm tra knox
     imei_input: IMEI có 15 ký tự | ví dụ 357301902793356
     check_button: Kiểm Tra
     option_knox_warranty_care: "THÔNG TIN KNOX + THÔNG TIN BẢO HÀNH + THÔNG TIN CARE+"

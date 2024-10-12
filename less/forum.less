@@ -1,134 +1,8 @@
 .CheckImeiPage {
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
 
-    // Styles for the loading overlay
-    .LoadingOverlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-
-    // Styles for the main container
-    .container {
-        justify-content: center;
-
-        // Styles for the form container
-        .containerForm {
-            justify-content: center;
-            align-items: center;
-
-            h1 {
-                text-align: center;
-                font-size: 18px;
-                margin-bottom: 20px;
-            }
-        }
-
-        // Styles for the result container
-        .containerResult {
-            justify-content: center;
-        }
-
-        // Styles for the IMEI form
-        .ImeiForm {
-            display: grid;
-            justify-content: center;
-
-            .FormMainGroup {
-                width: 520px;
-            }
-
-            .FormGroup {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .FormControl.ImeiInput {
-                flex: 1;
-                margin-right: 10px;
-                max-width: 450px;
-            }
-
-            .Button.Button--primary {
-                flex-shrink: 0;
-            }
-        }
-
-        // Styles for the result section
-        .Result {
-            width: auto;
-            display: grid;
-            justify-content: center;
-
-            .ResultSuccess {
-                color: #4D698E;
-
-                h3 {
-                    background-color: #4D698E;
-                    color: white;
-                    padding-left: 5px;
-                }
-            }
-
-            .ResultTable {
-                border-collapse: collapse;
-
-                td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                }
-
-                tr:nth-child(even) {
-                    background-color: #f9f9f9;
-                }
-
-                tr:hover {
-                    background-color: #ddd;
-                }
-            }
-
-            // New styles for the clear page link
-            .clearPage {
-                margin-top: 15px;
-                text-align: center;
-
-                a {
-                    color: #4D698E;
-                    text-decoration: none;
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                }
-            }
-        }
-
-        .ResultError {
-            margin-top: 2px;
-            display: grid;
-            justify-content: center;
-
-            h3 {
-                font-size: medium;
-                text-align: center;
-            }
-
-            p {
-                font-size: small;
-                text-align: center;
-            }
-        }
-    }
-}
-
-.UserPage {
     .LoadingOverlay {
         position: fixed;
         top: 0;
@@ -144,130 +18,146 @@
 
     .container {
         width: 100%;
-        max-width: 1280px;
+        max-width: 600px;
         margin: 0 auto;
-        padding: 0 15px;
     }
 
-    h1 {
-        text-align: center;
+    .containerForm {
         margin-bottom: 20px;
-        color: #4D698E;
-    }
 
-    .UserInfo {
-        display: flex;
-        flex-wrap: wrap;
-        background: #f9f9f9;
-        box-shadow: 0 2px 4px rgba(77, 105, 142, 0.1);
-        overflow: hidden;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .UserDetails {
-        width: 40%;
-        border-collapse: collapse;
-        border-right: 1px solid #e0e0e0;
-
-        th,
-        td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        th {
-            background-color: #4D698E;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 14px;
-            color: white;
-        }
-
-        td {
-            font-size: 14px;
-            color: #333;
-        }
-
-        tr:nth-child(even) {
-            background-color: #edf2f7;
-        }
-
-        tr:hover {
-            background-color: #e2e8f0;
-        }
-
-        thead tr {
-            background-color: #3c5576;
-            color: white;
-        }
-
-        thead th {
-            padding: 15px;
-            font-size: 16px;
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4D698E; // Updated color
         }
     }
 
-    .WalletDetails {
-        width: 30%;
-        border-collapse: collapse;
-
-        th,
-        td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+    .ImeiForm {
+        .FormMainGroup {
+            width: 100%;
         }
 
-        th {
-            background-color: #4D698E;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 14px;
-            color: white;
-        }
-
-        td {
-            font-size: 14px;
-            color: #333;
-        }
-
-        tr:nth-child(even) {
-            background-color: #edf2f7;
-        }
-
-        tr:hover {
-            background-color: #e2e8f0;
-        }
-
-        thead tr {
-            background-color: #3c5576;
-            color: white;
-        }
-
-        thead th {
-            padding: 15px;
-            font-size: 16px;
-        }
-    }
-
-    @media screen and (max-width: 1279px) {
-        .UserInfo {
+        .FormGroup {
+            display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
-        .UserDetails {
+        .FormControl.ImeiInput {
             width: 100%;
+            max-width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #4D698E; // Updated color
         }
 
-        .WalletDetails {
+        .Button.Button--primary {
             width: 100%;
+            max-width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4D698E; // Updated color
+            color: white;
+            border: none;
+            cursor: pointer;
+
+            &:hover {
+                background-color: darken(#4D698E, 10%); // Slightly darker on hover
+            }
+        }
+    }
+
+    .Result {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f8fa; // Light background color
+        color: #2c3e50; // Dark text color for better readability
+
+        .ResultSuccess {
+
+            h2 {
+                font-size: 20px;
+                color: #4D698E; // Updated color
+            }
+
+            .ResultTable {
+                width: 100%;
+                border-collapse: collapse;
+
+                tr:hover {
+                    background-color: #e6eef7; // Light blue shade on hover
+                }
+
+                td {
+                    font-size: 14px;
+                    padding: 10px;
+                    transition: background-color 0.3s ease;
+                    color: #34495e; // Darker text color for contrast
+                    border-bottom: 1px solid #d1e0ef; // Light border color
+                }
+            }
+
+            .clearPage {
+                margin-top: 15px;
+                text-align: center;
+
+                a {
+                    text-decoration: none;
+                    font-size: 14px;
+                    color: #4D698E; // Use sidebar color for link
+
+                    &:hover {
+                        text-decoration: underline;
+                        color: darken(#4D698E, 10%); // Darker on hover
+                    }
+                }
+            }
         }
 
-        .UserDetails {
-            border-right: none;
-            border-bottom: 1px solid #e0e0e0;
+        .ResultError {
+            h3 {
+                font-size: 18px;
+                color: #e74c3c; // Red color for error
+            }
+        }
+    }
+
+    // Media query for mobile devices
+    @media screen and (max-width: 480px) {
+
+        .containerForm {
+            h2 {
+                font-size: 18px;
+            }
+        }
+
+        .ImeiForm {
+            .FormControl.ImeiInput {
+                font-size: 14px;
+            }
+
+            .Button.Button--primary {
+                font-size: 14px;
+            }
+        }
+
+        .Result {
+            .ResultTable {
+                td {
+                    font-size: 12px;
+                }
+            }
+
+            .clearPage {
+                a {
+                    font-size: 12px;
+                }
+            }
         }
     }
 }
@@ -305,10 +195,10 @@
         margin-right: 2%;
 
         h2 {
-            font-size: 22px;
-            margin-bottom: 15px;
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
+            color: #4D698E;
+            font-size: 24px;
         }
 
         .DepositForm {
@@ -377,16 +267,17 @@
             margin-top: 20px;
             text-align: center;
 
-            h3 {
-                font-size: 18px;
-                margin-bottom: 10px;
-                color: #333;
+            h4 {
+                text-align: center;
+                color: #4D698E;
+                font-size: 16px;
+                margin-top: 2px;
+                margin-bottom: 5px;
             }
 
             img {
                 max-width: 100%;
                 height: auto;
-                margin-bottom: 15px;
                 border: 1px solid #ddd;
                 border-radius: 4px;
             }
@@ -420,10 +311,10 @@
         max-width: 68%;
 
         h2 {
-            font-size: 22px;
-            margin-bottom: 15px;
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
+            color: #4D698E;
+            font-size: 24px;
         }
 
         .DepositHistoryTable {
@@ -434,35 +325,33 @@
             td {
                 padding: 12px;
                 text-align: left;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #ddd;
             }
 
             th {
                 background-color: #4D698E;
-                font-weight: bold;
                 color: white;
             }
 
-            tr:last-child td {
-                border-bottom: none;
-            }
-
             tr:nth-child(even) {
-                background-color: #ffffff;
+                background-color: #f2f2f2;
             }
 
             tr:hover {
-                background-color: #f5f5f5;
+                background-color: #ddd;
             }
         }
     }
 
-    // Media query cho màn hình nhỏ
-    @media screen and (max-width: 1279px) {
+    // Media queries cho thiết bị di động
+    @media screen and (max-width: 768px) {
+        padding: 15px;
+
         .container {
             flex-direction: column;
         }
 
+        .containerForm,
         .DepositHistory {
             flex: 1 1 100%;
             max-width: 100%;
@@ -470,19 +359,369 @@
         }
 
         .containerForm {
-            flex: 1 1 100%;
-            max-width: 100%;
-            margin-right: 0;
             margin-bottom: 20px;
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .DepositForm {
+                .FormGroup {
+                    .PresetButtons {
+                        flex-wrap: wrap;
+
+                        .PresetButton {
+                            flex: 1 1 calc(50% - 5px);
+                            margin-right: 5px;
+                            margin-bottom: 5px;
+                            font-size: 12px;
+                            padding: 6px;
+
+                            &:nth-child(2n) {
+                                margin-right: 0;
+                            }
+                        }
+                    }
+
+                    .InputButtonGroup {
+                        flex-direction: column;
+
+                        .AmountInput,
+                        .Button--primary {
+                            width: 100%;
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            .QRCodeContainer {
+
+                h2 {
+                    font-size: 20px;
+                }
+
+                .DepositContainer {
+
+                    .DepositContent,
+                    .depositAmount {
+                        font-size: 14px;
+                    }
+                }
+
+                .DepositMessage {
+                    font-size: 12px;
+                }
+            }
         }
 
-        .PresetButtons {
-            flex-wrap: wrap;
-
-            .PresetButton {
-                flex: 1 1 calc(50% - 5px);
-                margin-bottom: 5px;
+        .DepositHistory {
+            h2 {
+                font-size: 20px;
             }
+
+            .DepositHistoryTable {
+                font-size: 14px;
+
+                th,
+                td {
+                    padding: 8px;
+                }
+            }
+        }
+    }
+
+    // Media queries cho màn hình cực nhỏ (điện thoại di động)
+    @media screen and (max-width: 480px) {
+        padding: 10px;
+
+        .containerForm {
+            h2 {
+                font-size: 18px;
+            }
+
+            .DepositForm {
+                .FormGroup {
+                    .PresetButtons {
+                        .PresetButton {
+                            flex: 1 1 100%;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        .DepositHistory {
+            h2 {
+                font-size: 18px;
+            }
+
+            .DepositHistoryTable {
+                font-size: 12px;
+
+                th,
+                td {
+                    padding: 6px;
+                }
+            }
+        }
+    }
+}
+
+.UserPage {
+    .LoadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #4D698E;
+        font-size: 24px;
+    }
+
+    .UserInfo {
+        display: flex;
+        background: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(77, 105, 142, 0.1);
+        overflow: hidden;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .UserDetails {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .WalletDetails {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .UserDetails th {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .UserDetails td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .WalletDetails th {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .WalletDetails td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .UserDetails th {
+        background-color: #4D698E;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: white;
+    }
+
+    .WalletDetails th {
+        background-color: #4D698E;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: white;
+    }
+
+    .UserDetails td {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .WalletDetails td {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .UserDetails tr:nth-child(even) {
+        background-color: #edf2f7;
+    }
+
+    .WalletDetails tr:nth-child(even) {
+        background-color: #edf2f7;
+    }
+
+    .UserDetails tr:hover {
+        background-color: #e2e8f0;
+    }
+
+    .WalletDetails tr:hover {
+        background-color: #e2e8f0;
+    }
+
+    .UserDetails thead tr {
+        background-color: #3c5576;
+        color: white;
+    }
+
+    .WalletDetails thead tr {
+        background-color: #3c5576;
+        color: white;
+    }
+
+    .UserDetails thead th {
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .WalletDetails thead th {
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    @media screen and (min-width: 768px) {
+        .UserDetails {
+            width: 60%;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .WalletDetails {
+            width: 40%;
+        }
+    }
+
+    @media screen and (max-width: 767px) {
+        .container {
+            padding: 0 10px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .UserInfo {
+            flex-direction: column;
+        }
+
+        .UserDetails {
+            width: 100%;
+        }
+
+        .WalletDetails {
+            width: 100%;
+        }
+
+        .UserDetails th {
+            padding: 10px;
+        }
+
+        .UserDetails td {
+            padding: 10px;
+        }
+
+        .WalletDetails th {
+            padding: 10px;
+        }
+
+        .WalletDetails td {
+            padding: 10px;
+        }
+
+        .UserDetails th {
+            font-size: 12px;
+        }
+
+        .WalletDetails th {
+            font-size: 12px;
+        }
+
+        .UserDetails td {
+            font-size: 12px;
+        }
+
+        .WalletDetails td {
+            font-size: 12px;
+        }
+
+        .UserDetails thead th {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .WalletDetails thead th {
+            padding: 12px;
+            font-size: 14px;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        h2 {
+            font-size: 18px;
+        }
+
+        .UserDetails th {
+            padding: 8px;
+        }
+
+        .UserDetails td {
+            padding: 8px;
+        }
+
+        .WalletDetails th {
+            padding: 8px;
+        }
+
+        .WalletDetails td {
+            padding: 8px;
+        }
+
+        .UserDetails th {
+            font-size: 11px;
+        }
+
+        .WalletDetails th {
+            font-size: 11px;
+        }
+
+        .UserDetails td {
+            font-size: 11px;
+        }
+
+        .WalletDetails td {
+            font-size: 11px;
+        }
+
+        .UserDetails thead th {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .WalletDetails thead th {
+            padding: 10px;
+            font-size: 12px;
         }
     }
 }

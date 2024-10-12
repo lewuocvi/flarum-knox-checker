@@ -3,25 +3,63 @@ lewuocvi-knoxextchecker:
     my_cool_key: My Cool Key
 
   forum:
-    page_title: Check knox samsung | check knox policy | samsung knox guard
-    page_description: Check Knox Samsung information using IMEI, review installment debt status and Samsung warranty period, as well as Care+ contract details.
-    title: Check Knox Samsung with IMEI
-    knox_result: Knox check result
-    imei_input: IMEI with 15 digits | example 357301902793356
-    check_button: Check Now
-    option_knox_warranty_care: "KNOX INFO + WARRANTY INFO + CARE+ INFO"
-    option_warranty: "WARRANTY INFO"
-    option_careplus: "CARE+ INFO"
-    knox_status: Knox Status
-    company_name: Company Name
-    device_status: Device Status
-    registered_knox: Yes (Registered Knox)
-    unregistered_knox: No (Unregistered Knox)
+    page_title: Check knox samsung | Check warranty | Care+ information
+    page_description: Check Samsung Knox information by IMEI number, check installment debt status and warranty period for Samsung Vietnam, as well as Care+ contract information.
+    title: Check Samsung Knox By IMEI Number
+    knox_result_title: Knox check result
+    imei_input: IMEI has 15 characters | example 357301902793356
+    check_button: Check
+    option_knox_warranty_care: "KNOX INFORMATION + WARRANTY INFORMATION + CARE+ INFORMATION"
+    option_warranty: "WARRANTY INFORMATION"
+    option_careplus: "CARE+ INFORMATION"
+    knox_status: Knox status
+    company_name: Company name
+    device_status: Device status
+    registered_knox: Yes (Knox Registered)
+    unregistered_knox: No (Knox Not Registered)
     notification_message: Notification
-    error_title: An error has occurred
+    error_title: An error occurred
+    clear_page: Check another IMEI
+
+    user_page_title: Detailed user account information
+    user_page_description: Page displaying detailed user account information, including current balance, total amount deposited, amount spent, and remaining balance in the account.
+    user_profile: Account Information
+    name: Account name
+    email: Email
+    user_id: Account ID
+    created_at: Registration time
+    updated_at: Update time
+    no_user_data: No information for this user
+    error_loading_user_data: Error querying user information
+    not_logged_in: Not logged in
+
+    wallet_info: Virtual wallet information
+    wallet_id: Virtual wallet account number
+    total_deposited: Total amount deposited
+    total_used: Total amount used
+    balance: Available balance
+    wallet_created_at: Creation time
+    wallet_updated_at: Update time
+    deposit_button: Deposit
+
+    deposit_title: Deposit to account
+    deposit_amount_input: Deposit amount
+    deposit_amount: Amount
+    generate_qr_button: Generate QR code
+    qr_generation_success: QR code generated successfully
+    qr_code_title: QR Code for Bank Transfer
+    deposit_content: Transfer content
+
+    qr_generation_error: Error generating QR code
+
+    deposit_history_title: Account deposit transaction history
+    no_deposit_history: No transactions
+    deposit_history_date: Date
+    deposit_history_amount: Amount
+    deposit_history_detail: Details
 
   api:
-    error_guest: "You need to log in to check the IMEI."
+    error_guest: "You need to log in to check IMEI."
     error_invalid_imei: "Invalid IMEI. Please enter again."
     error_invalid_info: "Invalid information. Please check again."
     error_server_connection: "Error connecting to the server. Please try again later."
