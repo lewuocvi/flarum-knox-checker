@@ -90,12 +90,12 @@ export default class CheckImeiPage extends Page {
                 },
             });
 
-            this.result(response.data);
+            this.result(response);
 
             console.log('API response:', response);
 
-            if (response && response.data) {
-                location.href = `${app.forum.attribute('baseUrl')}/d/${response.data.id}`;
+            if (response && response.id) {
+                location.href = `${app.forum.attribute('baseUrl')}/d/${response.id}`;
             } else {
                 console.error('Invalid response ID');
             }
