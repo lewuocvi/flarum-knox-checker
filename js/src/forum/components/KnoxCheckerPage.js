@@ -7,7 +7,7 @@ import MatrixEffect from './MatrixEffect';
 export default class CheckImeiPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
-        this.imei = Stream('357301902793356'); //357301902793356
+        this.imei = Stream(''); //357301902793356
         this.loading = Stream(false);
         this.result = Stream(null);
     }
