@@ -97,7 +97,7 @@ export default class CheckImeiPage extends Page {
             if (response && response.id) {
                 location.href = `${app.forum.attribute('baseUrl')}/d/${response.id}`;
             } else {
-                console.error('Invalid response ID');
+                location.reload();
             }
         } catch (error) {
             console.error('Error:', error);
