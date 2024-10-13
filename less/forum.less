@@ -9,11 +9,57 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(0, 0, 0, 0.7);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 1000;
+
+        .LoadingIndicator {
+            position: relative;
+            z-index: 1001;
+        }
+
+        .MatrixEffectContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .LoadingContent {
+            text-align: center;
+            animation: greenBlink 1.5s infinite;
+        }
+
+        @keyframes greenBlink {
+            0% {
+                color: #ffffff;
+            }
+
+            50% {
+                color: #00ff00;
+            }
+
+            100% {
+                color: #ffffff;
+            }
+        }
+
+        .LoadingText {
+            font-size: 18px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1002;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
     }
 
     .container {
@@ -77,47 +123,6 @@
         justify-content: center;
         background-color: #f5f8fa; // Light background color
         color: #2c3e50; // Dark text color for better readability
-
-        .ResultSuccess {
-
-            h2 {
-                font-size: 20px;
-                color: #4D698E; // Updated color
-            }
-
-            .ResultTable {
-                width: 100%;
-                border-collapse: collapse;
-
-                tr:hover {
-                    background-color: #e6eef7; // Light blue shade on hover
-                }
-
-                td {
-                    font-size: 14px;
-                    padding: 10px;
-                    transition: background-color 0.3s ease;
-                    color: #34495e; // Darker text color for contrast
-                    border-bottom: 1px solid #d1e0ef; // Light border color
-                }
-            }
-
-            .clearPage {
-                margin-top: 15px;
-                text-align: center;
-
-                a {
-                    text-decoration: none;
-                    font-size: 14px;
-                    color: #4D698E; // Use sidebar color for link
-
-                    &:hover {
-                        text-decoration: underline;
-                        color: darken(#4D698E, 10%); // Darker on hover
-                    }
-                }
-            }
-        }
 
         .ResultError {
             h3 {

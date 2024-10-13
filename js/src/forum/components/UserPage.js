@@ -1,7 +1,5 @@
 import Page from 'flarum/components/Page';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
-import avatar from 'flarum/helpers/avatar';
-import username from 'flarum/helpers/username';
 
 export default class UserPage extends Page {
     oninit(vnode) {
@@ -61,6 +59,27 @@ export default class UserPage extends Page {
         }).format(amount);
     }
 
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.just_now');
+        }
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.minutes_ago', { count: diffInMinutes });
+        }
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.hours_ago', { count: diffInHours });
+        }
+
+        return date.toLocaleString();
+    }
+
     view() {
         if (this.loading) {
             return <LoadingIndicator />;
@@ -103,11 +122,11 @@ export default class UserPage extends Page {
                                 </tr>
                                 <tr>
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.created_at')}</td>
-                                    <td>{new Date(user.created_at).toLocaleString()}</td>
+                                    <td>{this.formatTimeAgo(new Date(user.created_at))}</td>
                                 </tr>
                                 <tr>
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.updated_at')}</td>
-                                    <td>{new Date(user.updated_at).toLocaleString()}</td>
+                                    <td>{this.formatTimeAgo(new Date(user.updated_at))}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -141,7 +160,7 @@ export default class UserPage extends Page {
                                 </tr> */}
                                 <tr>
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_updated_at')}</td>
-                                    <td>{new Date(wallet.updated_at).toLocaleString()}</td>
+                                    <td>{this.formatTimeAgo(new Date(wallet.updated_at))}</td>
                                 </tr>
                             </tbody>
                         </table>

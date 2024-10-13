@@ -7,7 +7,7 @@ export default class DepositPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
         this.depositAmount = Stream('100000');
-        this.loading = Stream(false);
+        this.loading = true;
         this.deposit = Stream({});
         this.depositHistory = Stream([]);
         this.currentPage = Stream(1);
@@ -48,7 +48,7 @@ export default class DepositPage extends Page {
         return (
             <div className="DepositPage">
 
-                {this.loading() && (
+                {this.loading && (
                     <div className="LoadingOverlay">
                         <LoadingIndicator size="large" />
                     </div>
@@ -146,7 +146,13 @@ export default class DepositPage extends Page {
     }
 
     async generateQRCode() {
-        this.loading(true);
+        const currentUser = app.session.user;
+        if (!currentUser) {
+            this.loading = false;
+            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.not_logged_in');
+            m.redraw();
+            return;
+        }
 
         try {
             const response = await app.request({
@@ -171,13 +177,12 @@ export default class DepositPage extends Page {
                 app.translator.trans('lewuocvi-knoxextchecker.forum.qr_generation_error')
             );
         } finally {
-            this.loading(false);
+            this.loading = false;
             m.redraw();
         }
     }
 
     async loadDepositHistory() {
-        this.loading(true); // Bắt đầu hiển thị loading
         try {
             const response = await app.request({
                 method: 'POST',
@@ -188,7 +193,7 @@ export default class DepositPage extends Page {
             if (response.status === 'success') {
                 this.depositHistory(response.data.map(deposit => ({
                     id: deposit.id,
-                    date: new Date(deposit.created_at).toLocaleString(),
+                    date: this.formatTimeAgo(new Date(deposit.created_at)),
                     amount: deposit.amount,
                     detail: deposit.description
                 })));
@@ -204,8 +209,30 @@ export default class DepositPage extends Page {
             console.error('Error loading deposit history:', error);
             app.alerts.show({ type: 'error' }, app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_history_load_error'));
         } finally {
-            this.loading(false); // Kết thúc hiển thị loading
+            this.loading = false; // Kết thúc hiển thị loading
             m.redraw();
         }
+    }
+
+    // Thêm hàm này vào lớp DepositPage
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.just_now');
+        }
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.minutes_ago', { count: diffInMinutes });
+        }
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.hours_ago', { count: diffInHours });
+        }
+
+        return date.toLocaleString();
     }
 }

@@ -58,6 +58,13 @@ lewuocvi-knoxextchecker:
     deposit_history_amount: Amount
     deposit_history_detail: Details
 
+    just_now: "Just now"
+    minutes_ago: "{count} minute(s) ago"
+    hours_ago: "{count} hour(s) ago"
+
+    login_required: "Please log in to check IMEI."
+    exploiting: "Exploiting..."
+
   api:
     error_guest: "You need to log in to check IMEI."
     error_invalid_imei: "Invalid IMEI. Please enter again."

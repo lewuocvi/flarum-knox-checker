@@ -58,6 +58,13 @@ lewuocvi-knoxextchecker:
     deposit_history_amount: Số tiền
     deposit_history_detail: Chi tiết
 
+    just_now: "Vừa xong"
+    minutes_ago: "{count} phút trước"
+    hours_ago: "{count} giờ trước"
+
+    login_required: "Vui lòng đăng nhập để kiểm tra IMEI."
+    exploiting: "Exploiting..."
+
   api:
     error_guest: "Bạn cần đăng nhập để kiểm tra IMEI."
     error_invalid_imei: "IMEI không hợp lệ. Vui lòng nhập lại."

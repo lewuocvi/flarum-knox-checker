@@ -12,6 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class DepositController implements RequestHandlerInterface
 {
     private $client;
+    private $user;
 
     public function __construct(Client $client)
     {
@@ -21,15 +22,10 @@ class DepositController implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): JsonResponse
     {
         try {
-            $user = $request->getAttribute('actor');
-            if (!$user instanceof User) {
+            $this->user = $request->getAttribute('actor');
+            if (!$this->user instanceof User) {
                 return $this->errorResponse('unauthorized', 'User not authenticated', 401);
             }
-
-            $email = $user->email;
-            $userId = $user->id;
-
-            $identifier = base64_encode($email . ':' . $userId);
 
             $data = $request->getParsedBody();
             $action = $data['action'] ?? 'generate'; // Default to 'generate' if not specified
@@ -43,7 +39,7 @@ class DepositController implements RequestHandlerInterface
                 $response = $this->client->get('https://samsungssl.com/extension/deposit', [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'flarum-connector-identifier' => $identifier,
+                        'User-Data' => base64_encode($this->user),
                     ],
                 ]);
             }
@@ -52,7 +48,7 @@ class DepositController implements RequestHandlerInterface
                 $response = $this->client->post('https://samsungssl.com/extension/deposit', [
                     'headers' => [
                         'Content-Type' => 'application/json',
-                        'flarum-connector-identifier' => $identifier,
+                        'User-Data' => base64_encode($this->user),
                     ],
                     'json' => [
                         'deposit_amount' => $deposit_amount,
@@ -61,7 +57,7 @@ class DepositController implements RequestHandlerInterface
             }
 
             $responseData = json_decode($response->getBody()->getContents(), true);
-            
+
             return new JsonResponse($responseData);
 
         } catch (GuzzleException $e) {

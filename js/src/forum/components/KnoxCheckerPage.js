@@ -2,13 +2,14 @@ import Page from 'flarum/components/Page';
 import Button from 'flarum/components/Button';
 import Stream from 'flarum/utils/Stream';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
+import MatrixEffect from './MatrixEffect';
 
 export default class CheckImeiPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
         this.imei = Stream('357301902793356'); //357301902793356
-        this.result = Stream(null);
         this.loading = Stream(false);
+        this.result = Stream(null);
     }
 
     oncreate(vnode) {
@@ -31,27 +32,105 @@ export default class CheckImeiPage extends Page {
         metaTag.content = content;
     }
 
-    clearPage(e) {
+    initLoadingText() {
+        const loadingText = this.element.querySelector('.LoadingText');
+        if (!loadingText) return;
+
+        const text = app.translator.trans('lewuocvi-knoxextchecker.forum.exploiting');
+        let index = 0;
+        const typingSpeed = 100; // Milliseconds per character
+        const pauseBetweenLoops = 1000; // Pause before restarting
+
+        function typeNextCharacter() {
+            if (index < text.length) {
+                loadingText.textContent += text[index];
+                index++;
+                setTimeout(typeNextCharacter, typingSpeed);
+            } else {
+                // When finished typing, pause then start over
+                setTimeout(() => {
+                    loadingText.textContent = '';
+                    index = 0;
+                    typeNextCharacter();
+                }, pauseBetweenLoops);
+            }
+        }
+
+        // Start the typing effect
+        typeNextCharacter();
+    }
+
+
+    async checkImei(e) {
         e.preventDefault();
-        this.imei('');
+
+        // Check if the user is logged in
+        if (!app.session.user) {
+            this.result({
+                status: 'error',
+                message: app.translator.trans('lewuocvi-knoxextchecker.forum.login_required')
+            });
+            m.redraw();
+            return;
+        }
+
         this.result(null);
-        this.loading(false);
-        m.redraw();
+        this.loading(true);
+
+        setTimeout(() => {
+            this.initLoadingText();
+        }, 3);
+
+        try {
+            const response = await app.request({
+                method: 'POST',
+                url: app.forum.attribute('apiUrl') + '/knox-checker',
+                body: {
+                    imei: this.imei()
+                },
+            });
+
+            this.result(response.data);
+
+            console.log('API response:', response);
+
+            if (response && response.data) {
+                location.href = `${app.forum.attribute('baseUrl')}/d/${response.data.id}`;
+            } else {
+                console.error('Invalid response ID');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            this.result({ status: 'error', message: app.translator.trans('lewuocvi-knoxextchecker.forum.error_title') });
+            this.loading(false);
+            m.redraw();
+        }
     }
 
     view() {
         return (
             <div className="CheckImeiPage">
+
                 {
                     this.loading() && (
                         <div className="LoadingOverlay">
-                            <LoadingIndicator size="large" />
+                            <div className="MatrixEffectContainer">
+                                <MatrixEffect />
+                            </div>
+                            <div className="LoadingContent">
+                                <LoadingIndicator size="large" />
+                                <div className="LoadingText">
+                                    {app.translator.trans('lewuocvi-knoxextchecker.forum.exploiting')}
+                                </div>
+                            </div>
                         </div>
                     )
                 }
+
                 <div className='container'>
+
                     {
-                        this.result() === null && (
+                        this.loading() === false && this.result() === null && (
                             <div className="containerForm">
                                 <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.title')}</h2>
                                 <form onsubmit={this.checkImei.bind(this)} className="ImeiForm">
@@ -66,47 +145,11 @@ export default class CheckImeiPage extends Page {
                         )
                     }
 
-                    <div className="containerResult">
-                        {
-                            this.result() && (
+                    {
+                        this.result() && (
+                            <div className="containerResult">
+
                                 <div className="Result">
-
-                                    <div>
-                                        {
-                                            this.result().status === 'success' && (
-                                                <div className='ResultSuccess'>
-                                                    <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.knox_result_title')}</h2>
-                                                    <table className="ResultTable">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.knox_status')}:</td>
-                                                                <td>{this.result().registered ? app.translator.trans('lewuocvi-knoxextchecker.forum.registered_knox') : app.translator.trans('lewuocvi-knoxextchecker.forum.unregistered_knox')}</td>
-                                                            </tr>
-                                                            {
-                                                                this.result().generalInfo && (<tr>
-                                                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.company_name')}:</td>
-                                                                    <td>{this.result().generalInfo.companyName}</td>
-                                                                </tr>)
-                                                            }
-                                                            {
-                                                                this.result().generalInfo && (<tr>
-                                                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.device_status')}:</td>
-                                                                    <td>{this.result().generalInfo.deviceState}</td>
-                                                                </tr>)
-                                                            }
-                                                            <tr>
-                                                                <td colSpan="2">{this.result().message}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    <div className='clearPage'>
-                                                        <a href="javascript:void(0)" onclick={this.clearPage.bind(this)}>{app.translator.trans('lewuocvi-knoxextchecker.forum.clear_page')}</a>
-                                                    </div>
-                                                </div>
-                                            )
-                                        }
-                                    </div>
-
                                     {
                                         this.result().status === 'error' && (
                                             <div className='ResultError'>
@@ -115,39 +158,14 @@ export default class CheckImeiPage extends Page {
                                             </div>
                                         )
                                     }
-
                                 </div>
-                            )
-                        }
-                    </div>
+                            </div>
+                        )
+                    }
+
                 </div>
+
             </div>
         );
-    }
-
-    async checkImei(e) {
-        e.preventDefault();
-        this.result(null);
-        this.loading(true);
-
-        try {
-            const response = await app.request({
-                method: 'POST',
-                url: app.forum.attribute('apiUrl') + '/knox-checker',
-                body: {
-                    imei: this.imei()
-                },
-            });
-
-            console.log('API response:', response);
-            this.result(response);
-        } catch (error) {
-            console.error('Error:', error);
-            this.result({ status: 'error', message: app.translator.trans('lewuocvi-knoxextchecker.forum.error_title') });
-        } finally {
-            this.loading(false);
-            console.log('Loading state:', this.loading());
-            m.redraw();
-        }
     }
 }
