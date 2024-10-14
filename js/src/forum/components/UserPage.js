@@ -4,12 +4,17 @@ import LoadingIndicator from 'flarum/components/LoadingIndicator';
 export default class UserPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
-        this.loading = true;
+        this.loading = Stream(true);
         this.user = null;
         this.error = null;
-        this.loadUserData().catch(error => {
-            console.error('Error in loadUserData:', error);
-        });
+        this.baseUrl = app.forum.attribute('baseUrl');
+
+        if (app.session.user) {
+            this.loadUserData();
+        }
+        else {
+            location.href = this.baseUrl; // Redirect to the home page if not logged in
+        }
     }
 
     oncreate(vnode) {
@@ -29,21 +34,12 @@ export default class UserPage extends Page {
     }
 
     async loadUserData() {
-        const currentUser = app.session.user;
-        if (!currentUser) {
-            this.loading = false;
-            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.not_logged_in');
-            m.redraw();
-            return;
-        }
-
         try {
-            const response = await app.request({ method: 'POST', url: app.forum.attribute('apiUrl') + '/knox-checker/user' });
-            this.user = response;
-            this.loading = false;
+            this.user = await app.request({ method: 'POST', url: app.forum.attribute('apiUrl') + '/knox-checker/user' });
+            this.loading(false);
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
-            this.loading = false;
+            this.loading(false);
             console.error('Error loading user data:', error);
         } finally {
             m.redraw();
@@ -81,7 +77,7 @@ export default class UserPage extends Page {
     }
 
     view() {
-        if (this.loading) {
+        if (this.loading()) {
             return <LoadingIndicator />;
         }
 
@@ -134,7 +130,12 @@ export default class UserPage extends Page {
                         <table className="WalletDetails">
                             <thead>
                                 <tr>
-                                    <th colSpan="2">{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</th>
+                                    <th colSpan="2">
+                                        <div className='WalletDetailTitle'>
+                                            <p>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</p>
+                                            <a href={`${this.baseUrl}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>

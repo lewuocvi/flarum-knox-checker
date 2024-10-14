@@ -346,6 +346,41 @@
                 background-color: #ddd;
             }
         }
+
+        .Pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+
+            .Button {
+                margin: 0 5px;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+
+                &.Button--primary {
+                    background-color: #4D698E; // Updated color
+                    color: #fff;
+                    border: none;
+
+                    &:hover {
+                        background-color: darken(#4D698E, 10%); // Slightly darker on hover
+                    }
+                }
+
+                &.Button--secondary {
+                    background-color: #ecf0f1;
+                    color: #2c3e50;
+                    border: 1px solid #bdc3c7;
+
+                    &:hover {
+                        background-color: #bdc3c7;
+                    }
+                }
+            }
+        }
     }
 
     // Media queries cho thiết bị di động
@@ -519,6 +554,23 @@
     .WalletDetails {
         width: 100%;
         border-collapse: collapse;
+
+        .WalletDetailTitle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            p {
+                margin: 0;
+                font-size: 16px;
+            }
+
+            a {
+                color: #f9f9f9;
+                font-size: 16px;
+                text-decoration: none;
+            }
+        }
     }
 
     .UserDetails th {

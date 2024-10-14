@@ -3,7 +3,7 @@ lewuocvi-knoxextchecker:
     my_cool_key: My Cool Key
 
   forum:
-    page_title: Check knox samsung | Check warranty | Care+ information
+    page_title: Check Knox, Care+ insurance, and Samsung warranty quickly and accurately!
     page_description: Check Samsung Knox information by IMEI number, check installment debt status and warranty period for Samsung Vietnam, as well as Care+ contract information.
     title: Check Samsung Knox By IMEI Number
     knox_result_title: Knox check result
@@ -41,6 +41,7 @@ lewuocvi-knoxextchecker:
     wallet_created_at: Creation time
     wallet_updated_at: Update time
     deposit_button: Deposit
+    deposit_money: Deposit Money
 
     deposit_title: Deposit to account
     deposit_amount_input: Deposit amount

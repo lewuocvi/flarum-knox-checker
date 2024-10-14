@@ -3,7 +3,7 @@ lewuocvi-knoxextchecker:
     my_cool_key: My Cool Key
 
   forum:
-    page_title: Check knox samsung | Tra bảo hành | Thông tin care+
+    page_title: Kiểm tra Knox, bảo hiểm Care+, và bảo hành Samsung nhanh chóng, chính xác!
     page_description: Kiểm tra thông tin Knox Samsung bằng số IMEI, kiểm tra tình trạng nợ trả góp và thời hạn bảo hành Samsung Việt Nam, cũng như thông tin hợp đồng Care+.
     title: Kiểm Tra Knox Samsung Qua Số IMEI
     knox_result_title: Kết quả kiểm tra knox
@@ -41,6 +41,7 @@ lewuocvi-knoxextchecker:
     wallet_created_at: Thời gian tạo
     wallet_updated_at: Thời gian cập nhật
     deposit_button: Nạp tiền
+    deposit_money: Nạp tiền
 
     deposit_title: Nạp tiền vào tài khoản
     deposit_amount_input: Số tiền nạp

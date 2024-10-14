@@ -7,13 +7,19 @@ export default class DepositPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
         this.depositAmount = Stream('100000');
-        this.loading = true;
+        this.loading = Stream(true);
         this.deposit = Stream({});
         this.depositHistory = Stream([]);
         this.currentPage = Stream(1);
         this.lastPage = Stream(1);
-        this.generateQRCode();
-        this.loadDepositHistory();
+        this.baseUrl = app.forum.attribute('baseUrl');
+        if (app.session.user) {
+            this.generateQRCode();
+            this.loadDepositHistory();
+        }
+        else {
+            location.href = this.baseUrl; // Redirect to the home page if not logged in
+        }
     }
 
     oncreate(vnode) {
@@ -41,6 +47,110 @@ export default class DepositPage extends Page {
         }).format(amount);
     }
 
+    async submitHandler(e) {
+        e.preventDefault();
+
+        this.generateQRCode();
+    }
+
+    async generateQRCode() {
+        const currentUser = app.session.user;
+        if (!currentUser) {
+            this.loading(false);
+            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.not_logged_in');
+            m.redraw();
+            return;
+        }
+
+        try {
+            const response = await app.request({
+                method: 'POST',
+                url: `${app.forum.attribute('apiUrl')}/knox-checker/deposit`,
+                body: { action: 'generate', deposit_amount: this.depositAmount() }
+            });
+
+            if (response.status === 'success') {
+
+                const { qrcode_url, content, message, amount } = response.deposit;
+
+                this.deposit({ qrcode_url, content, message, amount });
+
+            } else {
+                throw new Error(response.message || 'Unknown error occurred');
+            }
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+            app.alerts.show(
+                { type: 'error' },
+                app.translator.trans('lewuocvi-knoxextchecker.forum.qr_generation_error')
+            );
+        } finally {
+            this.loading(false);
+            m.redraw();
+        }
+    }
+
+    async loadDepositHistory() {
+        try {
+            const response = await app.request({
+                method: 'POST',
+                url: app.forum.attribute('apiUrl') + '/knox-checker/deposit',
+                body: { action: 'history', page: this.currentPage(), limit: 10 }
+            });
+
+            if (response.status === 'success') {
+                this.depositHistory(response.data.map(deposit => ({
+                    id: deposit.id,
+                    date: this.formatTimeAgo(new Date(deposit.created_at)),
+                    amount: deposit.amount,
+                    detail: deposit.description
+                })));
+
+                this.currentPage(response.current_page);
+                this.lastPage(response.last_page);
+
+            } else {
+                console.error('Error in response:', response.message);
+                app.alerts.show({ type: 'error' }, app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_history_load_error'));
+            }
+        } catch (error) {
+            console.error('Error loading deposit history:', error);
+            app.alerts.show({ type: 'error' }, app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_history_load_error'));
+        } finally {
+            this.loading(false); // Kết thúc hiển thị loading
+            m.redraw();
+        }
+    }
+
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.just_now');
+        }
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.minutes_ago', { count: diffInMinutes });
+        }
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.hours_ago', { count: diffInHours });
+        }
+
+        return date.toLocaleString();
+    }
+
+    changePage(page) {
+        if (page > 0 && page <= this.lastPage()) {
+            this.currentPage(page);
+            this.loading(true);
+            this.loadDepositHistory();
+        }
+    }
+
     view() {
 
         console.log('Deposit history:', this.depositHistory());
@@ -48,7 +158,7 @@ export default class DepositPage extends Page {
         return (
             <div className="DepositPage">
 
-                {this.loading && (
+                {this.loading() && (
                     <div className="LoadingOverlay">
                         <LoadingIndicator size="large" />
                     </div>
@@ -133,106 +243,20 @@ export default class DepositPage extends Page {
                                 )}
                             </tbody>
                         </table>
+                        <div className="Pagination">
+                            {Array.from({ length: this.lastPage() }, (_, i) => i + 1).map(page => (
+                                <Button
+                                    key={page}
+                                    className={`Button ${this.currentPage() === page ? 'Button--primary' : 'Button--secondary'}`}
+                                    onclick={() => this.changePage(page)}
+                                >
+                                    {page}
+                                </Button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
         );
-    }
-
-    async submitHandler(e) {
-        e.preventDefault();
-
-        this.generateQRCode();
-    }
-
-    async generateQRCode() {
-        const currentUser = app.session.user;
-        if (!currentUser) {
-            this.loading = false;
-            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.not_logged_in');
-            m.redraw();
-            return;
-        }
-
-        try {
-            const response = await app.request({
-                method: 'POST',
-                url: `${app.forum.attribute('apiUrl')}/knox-checker/deposit`,
-                body: { action: 'generate', deposit_amount: this.depositAmount() }
-            });
-
-            if (response.status === 'success') {
-
-                const { qrcode_url, content, message, amount } = response.deposit;
-
-                this.deposit({ qrcode_url, content, message, amount });
-
-            } else {
-                throw new Error(response.message || 'Unknown error occurred');
-            }
-        } catch (error) {
-            console.error('Error generating QR code:', error);
-            app.alerts.show(
-                { type: 'error' },
-                app.translator.trans('lewuocvi-knoxextchecker.forum.qr_generation_error')
-            );
-        } finally {
-            this.loading = false;
-            m.redraw();
-        }
-    }
-
-    async loadDepositHistory() {
-        try {
-            const response = await app.request({
-                method: 'POST',
-                url: app.forum.attribute('apiUrl') + '/knox-checker/deposit',
-                body: { action: 'history', page: this.currentPage, limit: 10 }
-            });
-
-            if (response.status === 'success') {
-                this.depositHistory(response.data.map(deposit => ({
-                    id: deposit.id,
-                    date: this.formatTimeAgo(new Date(deposit.created_at)),
-                    amount: deposit.amount,
-                    detail: deposit.description
-                })));
-
-                this.currentPage = response.current_page;
-                this.lastPage = response.last_page;
-
-            } else {
-                console.error('Error in response:', response.message);
-                app.alerts.show({ type: 'error' }, app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_history_load_error'));
-            }
-        } catch (error) {
-            console.error('Error loading deposit history:', error);
-            app.alerts.show({ type: 'error' }, app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_history_load_error'));
-        } finally {
-            this.loading = false; // Kết thúc hiển thị loading
-            m.redraw();
-        }
-    }
-
-    // Thêm hàm này vào lớp DepositPage
-    formatTimeAgo(date) {
-        const now = new Date();
-        const diffInSeconds = Math.floor((now - date) / 1000);
-
-        if (diffInSeconds < 60) {
-            return app.translator.trans('lewuocvi-knoxextchecker.forum.just_now');
-        }
-
-        const diffInMinutes = Math.floor(diffInSeconds / 60);
-        if (diffInMinutes < 60) {
-            return app.translator.trans('lewuocvi-knoxextchecker.forum.minutes_ago', { count: diffInMinutes });
-        }
-
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        if (diffInHours < 24) {
-            return app.translator.trans('lewuocvi-knoxextchecker.forum.hours_ago', { count: diffInHours });
-        }
-
-        return date.toLocaleString();
     }
 }
