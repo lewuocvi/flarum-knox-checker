@@ -1,4 +1,5 @@
 import Page from 'flarum/components/Page';
+import Stream from 'flarum/utils/Stream';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 
 export default class UserPage extends Page {
