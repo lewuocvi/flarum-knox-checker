@@ -8,15 +8,18 @@ use GuzzleHttp\Exception\GuzzleException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
 class DepositController implements RequestHandlerInterface
 {
-    private $client;
-    private $user;
+    private Client $client;
+    private ?User $user = null;
+    private LoggerInterface $logger;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, LoggerInterface $logger)
     {
         $this->client = $client;
+        $this->logger = $logger;
     }
 
     public function handle(ServerRequestInterface $request): JsonResponse
@@ -28,43 +31,56 @@ class DepositController implements RequestHandlerInterface
             }
 
             $data = $request->getParsedBody();
-            $action = $data['action'] ?? 'generate'; // Default to 'generate' if not specified
-            $deposit_amount = $data['deposit_amount'] ?? 20000; // Default to 20000 if not specified
+            $action = $data['action'] ?? 'generate';
+            $deposit_amount = $data['deposit_amount'] ?? 20000;
 
             if (!in_array($action, ['history', 'generate'])) {
                 return $this->errorResponse('invalid_action', 'Invalid action specified', 400);
             }
 
-            if ($action == 'history') {
-                $response = $this->client->get('https://samsungssl.com/extension/deposit', [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'User-Data' => base64_encode($this->user),
-                    ],
-                ]);
-            }
-
-            if ($action == 'generate') {
-                $response = $this->client->post('https://samsungssl.com/extension/deposit', [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'User-Data' => base64_encode($this->user),
-                    ],
-                    'json' => [
-                        'deposit_amount' => $deposit_amount,
-                    ],
-                ]);
-            }
+            $response = $this->performAction($action, $deposit_amount);
 
             $responseData = json_decode($response->getBody()->getContents(), true);
 
             return new JsonResponse($responseData);
 
         } catch (GuzzleException $e) {
+            $this->logger->error('API error: ' . $e->getMessage());
             return $this->errorResponse('api_error', $e->getMessage(), 500);
         } catch (\Exception $e) {
+            $this->logger->error('Server error: ' . $e->getMessage());
             return $this->errorResponse('server_error', $e->getMessage(), 500);
         }
+    }
+
+    private function performAction(string $action, int $deposit_amount)
+    {
+        $url = 'https://samsungssl.com/extension/deposit';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept-Language' => $this->getLocale(),
+            'User-Data' => $this->encodeUserData($this->user),
+        ];
+
+        if ($action === 'history') {
+            return $this->client->get($url, ['headers' => $headers]);
+        }
+
+        return $this->client->post($url, [
+            'headers' => $headers,
+            'json' => ['deposit_amount' => $deposit_amount],
+        ]);
+    }
+
+    private function getLocale(): string
+    {
+        return app('translator')->getLocale();
+    }
+
+    private function encodeUserData(User $user): string
+    {
+        // Implement a secure way to encode user data
+        return base64_encode($user); // Example: encoding user
     }
 
     private function errorResponse(string $errorCode, string $message, int $status = 400): JsonResponse

@@ -64,6 +64,17 @@ class CheckImeiController implements RequestHandlerInterface
         return resolve('Flarum\Http\UrlGenerator')->to('forum')->base();
     }
 
+    private function getLocale(): string
+    {
+        return app('translator')->getLocale(); // Get the current locale
+    }
+
+    private function encodeUserData(User $user): string
+    {
+        // Implement a secure way to encode user data
+        return base64_encode($user); // Example: encoding user
+    }
+
     private function getJsonData(string $imei): array
     {
         try {
@@ -71,7 +82,8 @@ class CheckImeiController implements RequestHandlerInterface
             $response = $this->client->post('https://samsungssl.com/extension/knox-checker', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'User-Data' => base64_encode($this->user),
+                    'User-Data' => $this->encodeUserData($this->user),
+                    'Accept-Language' => $this->getLocale(),
                     'Request-From-Url' => $this->getBaseUrl(),
                 ],
                 'json' => [

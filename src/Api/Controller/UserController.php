@@ -4,19 +4,23 @@ namespace Samsungssl\KnoxChecker\Api\Controller;
 
 use Flarum\User\User;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class UserController implements RequestHandlerInterface
 {
-    private $client;
-    private $user;
+    private Client $client;
+    private ?User $user = null;
+    private $translator;
 
     public function __construct(Client $client)
     {
         $this->client = $client;
+        $this->translator = app('translator');
     }
+
     public function handle(ServerRequestInterface $request): JsonResponse
     {
         $this->user = $request->getAttribute('actor');
@@ -32,13 +36,25 @@ class UserController implements RequestHandlerInterface
         }
     }
 
+    private function getLocale(): string
+    {
+        return $this->translator->getLocale();
+    }
+
+    private function encodeUserData(User $user): string
+    {
+        // Implement a secure way to encode user data
+        return base64_encode($user); // Example: encoding user
+    }
+
     private function getJsonData(): array
     {
         try {
             $response = $this->client->post('https://samsungssl.com/extension/user', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'User-Data' => base64_encode($this->user),
+                    'Accept-Language' => $this->getLocale(),
+                    'User-Data' => $this->encodeUserData($this->user),
                 ],
             ]);
 
@@ -55,7 +71,7 @@ class UserController implements RequestHandlerInterface
                 [
                     'status' => (string) $status,
                     'code' => $errorCode,
-                    'title' => app('translator')->trans($errorCode),
+                    'title' => $this->translator->trans($errorCode),
                     'detail' => $message,
                 ],
             ],
