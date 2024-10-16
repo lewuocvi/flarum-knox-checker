@@ -18,8 +18,10 @@ lewuocvi-knoxextchecker:
     registered_knox: Yes (Knox Registered)
     unregistered_knox: No (Knox Not Registered)
     notification_message: Notification
-    error_title: An error occurred
-    clear_page: Check another IMEI
+    error_title: An error has occurred
+    error_occurred: An error has occurred
+    login_required: "Please log in to check IMEI."
+    exploiting: "Exploiting..."
 
     user_page_title: Detailed user account information
     user_page_description: Page displaying detailed user account information, including current balance, total amount deposited, amount spent, and remaining balance in the account.
@@ -62,9 +64,6 @@ lewuocvi-knoxextchecker:
     just_now: "Just now"
     minutes_ago: "{count} minute(s) ago"
     hours_ago: "{count} hour(s) ago"
-
-    login_required: "Please log in to check IMEI."
-    exploiting: "Exploiting..."
 
   api:
     error_guest: "You need to log in to check IMEI."

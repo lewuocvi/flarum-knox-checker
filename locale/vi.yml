@@ -19,7 +19,9 @@ lewuocvi-knoxextchecker:
     unregistered_knox: Không có (Không đăng ký knox)
     notification_message: Thông báo
     error_title: Đã xảy ra lỗi
-    clear_page: Kiểm tra imei khác
+    error_occurred: Đã xảy ra lỗi
+    login_required: "Vui lòng đăng nhập để kiểm tra IMEI."
+    exploiting: "Exploiting..."
 
     user_page_title: Thông tin chi tiết về tài khoản người dùng
     user_page_description: Trang hiển thị thông tin chi tiết về tài khoản người dùng, bao gồm số dư hiện tại, tổng số tiền đã nạp, số tiền đã chi tiêu và số tiền còn lại trong tài khoản.
@@ -62,9 +64,6 @@ lewuocvi-knoxextchecker:
     just_now: "Vừa xong"
     minutes_ago: "{count} phút trước"
     hours_ago: "{count} giờ trước"
-
-    login_required: "Vui lòng đăng nhập để kiểm tra IMEI."
-    exploiting: "Exploiting..."
 
   api:
     error_guest: "Bạn cần đăng nhập để kiểm tra IMEI."

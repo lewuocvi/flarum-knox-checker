@@ -32,54 +32,17 @@ export default class CheckImeiPage extends Page {
         metaTag.content = content;
     }
 
-    initLoadingText() {
-        const loadingText = this.element.querySelector('.LoadingText');
-        if (!loadingText) return;
-
-        const text = app.translator.trans('lewuocvi-knoxextchecker.forum.exploiting');
-        let index = 0;
-        const typingSpeed = 100; // Milliseconds per character
-        const pauseBetweenLoops = 1000; // Pause before restarting
-
-        function typeNextCharacter() {
-            if (index < text.length) {
-                loadingText.textContent += text[index];
-                index++;
-                setTimeout(typeNextCharacter, typingSpeed);
-            } else {
-                // When finished typing, pause then start over
-                setTimeout(() => {
-                    loadingText.textContent = '';
-                    index = 0;
-                    typeNextCharacter();
-                }, pauseBetweenLoops);
-            }
-        }
-
-        // Start the typing effect
-        typeNextCharacter();
-    }
-
-
     async checkImei(e) {
         e.preventDefault();
-
-        // Check if the user is logged in
-        if (!app.session.user) {
-            this.result({
-                status: 'error',
-                message: app.translator.trans('lewuocvi-knoxextchecker.forum.login_required')
-            });
-            m.redraw();
-            return;
-        }
 
         this.result(null);
         this.loading(true);
 
-        setTimeout(() => {
-            this.initLoadingText();
-        }, 3);
+        // Check if the user is logged in
+        if (!app.session.user) {
+            this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.login_required'));
+            return;
+        }
 
         try {
             const response = await app.request({
@@ -90,21 +53,26 @@ export default class CheckImeiPage extends Page {
                 },
             });
 
-            this.result(response);
-
             console.log('API response:', response);
+
+            this.result(response);
 
             if (response && response.id) {
                 location.href = `${app.forum.attribute('baseUrl')}/d/${response.id}`;
             } else {
-                location.reload();
+                console.error('No ID returned from API response');
             }
         } catch (error) {
-            console.error('Error:', error);
-            this.result({ status: 'error', message: app.translator.trans('lewuocvi-knoxextchecker.forum.error_title') });
+            this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.error_occurred'));
+        } finally {
             this.loading(false);
             m.redraw();
         }
+    }
+
+    handleError(message) {
+        this.result({ status: 'error', message });
+        this.loading(false);
     }
 
     view() {
@@ -130,7 +98,7 @@ export default class CheckImeiPage extends Page {
                 <div className='container'>
 
                     {
-                        this.loading() === false && this.result() === null && (
+                        this.loading() === false && (
                             <div className="containerForm">
                                 <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.title')}</h2>
                                 <form onsubmit={this.checkImei.bind(this)} className="ImeiForm">
@@ -147,18 +115,15 @@ export default class CheckImeiPage extends Page {
 
                     {
                         this.result() && (
-                            <div className="containerResult">
-
-                                <div className="Result">
-                                    {
-                                        this.result().status === 'error' && (
-                                            <div className='ResultError'>
-                                                <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h2>
-                                                <p>{this.result().message}</p>
-                                            </div>
-                                        )
-                                    }
-                                </div>
+                            <div className="Result">
+                                {
+                                    this.result().status === 'error' && (
+                                        <div className='ResultError'>
+                                            <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h2>
+                                            <p>{this.result().message}</p>
+                                        </div>
+                                    )
+                                }
                             </div>
                         )
                     }
