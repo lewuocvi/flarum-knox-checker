@@ -15,7 +15,7 @@ export default class DepositPage extends Page {
         this.baseUrl = app.forum.attribute('baseUrl');
         if (app.session.user) {
             this.generateQRCode();
-            this.loadDepositHistory();
+            this.loadDepositHistory(this.currentPage());
         }
         else {
             location.href = this.baseUrl; // Redirect to the home page if not logged in
@@ -90,8 +90,12 @@ export default class DepositPage extends Page {
         }
     }
 
-    async loadDepositHistory() {
+    async loadDepositHistory(page) {
         try {
+            if (page > 0 && page <= this.lastPage()) {
+                this.currentPage(page);
+                this.loading(true);
+            }
             const response = await app.request({
                 method: 'POST',
                 url: app.forum.attribute('apiUrl') + '/knox-checker/deposit',
@@ -108,6 +112,8 @@ export default class DepositPage extends Page {
 
                 this.currentPage(response.current_page);
                 this.lastPage(response.last_page);
+
+                setTimeout(() => { this.loadDepositHistory(page) }, 10000); // Update lịch sử đấu thêm thông tin sau mỗi 10s
 
             } else {
                 console.error('Error in response:', response.message);
@@ -141,14 +147,6 @@ export default class DepositPage extends Page {
         }
 
         return date.toLocaleString();
-    }
-
-    changePage(page) {
-        if (page > 0 && page <= this.lastPage()) {
-            this.currentPage(page);
-            this.loading(true);
-            this.loadDepositHistory();
-        }
     }
 
     view() {
@@ -248,7 +246,7 @@ export default class DepositPage extends Page {
                                 <Button
                                     key={page}
                                     className={`Button ${this.currentPage() === page ? 'Button--primary' : 'Button--secondary'}`}
-                                    onclick={() => this.changePage(page)}
+                                    onclick={() => this.loadDepositHistory(page)}
                                 >
                                     {page}
                                 </Button>
