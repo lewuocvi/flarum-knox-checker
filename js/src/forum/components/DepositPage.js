@@ -109,7 +109,7 @@ export default class DepositPage extends Page {
                 this.currentPage(response.current_page);
                 this.lastPage(response.last_page);
 
-                setTimeout(() => { this.loadDepositHistory(page) }, 10000); // Update lịch sử đấu thêm thông tin sau mỗi 10s
+                setTimeout(() => { if (location.href.endsWith('/knox-checker/deposit')) this.loadDepositHistory(page) }, 10000); // Update lịch sử đấu thêm thông tin sau mỗi 10s
 
             } else {
                 console.error('Error in response:', response.message);

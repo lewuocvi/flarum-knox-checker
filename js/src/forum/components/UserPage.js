@@ -143,10 +143,6 @@ export default class UserPage extends Page {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_id')}</td>
-                                    <td>{wallet.id}</td>
-                                </tr> */}
                                 <tr>
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_deposited')}</td>
                                     <td>{this.formatCurrency(wallet.total_deposited)}</td>
@@ -159,10 +155,6 @@ export default class UserPage extends Page {
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.balance')}</td>
                                     <td>{this.formatCurrency(wallet.balance)}</td>
                                 </tr>
-                                {/* <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_created_at')}</td>
-                                    <td>{new Date(wallet.created_at).toLocaleString()}</td>
-                                </tr> */}
                                 <tr>
                                     <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_updated_at')}</td>
                                     <td>{this.formatTimeAgo(new Date(wallet.updated_at))}</td>
