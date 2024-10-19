@@ -9,7 +9,10 @@ export default class CheckImeiPage extends Page {
         super.oninit(vnode);
         this.imei = Stream(''); //357301902793356
         this.loading = Stream(false);
+        this.user = Stream(null);
+        this.wallet = Stream(null);
         this.result = Stream(null);
+        this.servicePrice = Stream(0);
     }
 
     oncreate(vnode) {
@@ -21,10 +24,18 @@ export default class CheckImeiPage extends Page {
         this.updateMetaTag('description', app.translator.trans('lewuocvi-knoxextchecker.forum.page_description'));
         this.updateMetaTag('keywords', 'IMEI, Knox, Warranty, Check');
         this.requestAuthController();
+
+        if (this.getUser()) {
+            this.loadUserData();
+        }
     }
 
     getQuerystring() {
         return window.location.search;
+    }
+
+    getUser() {
+        return app.session.user;
     }
 
     async requestAuthController() {
@@ -51,6 +62,59 @@ export default class CheckImeiPage extends Page {
         metaTag.content = content;
     }
 
+    async loadUserData() {
+        try {
+            this.loading(true);
+            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
+            console.log('User Data:', { response });
+            if (response.status === 'success' && response.user) {
+                this.user(response.user);
+                this.wallet(response.user.wallet);
+                this.servicePrice(response.service_price ?? 0);
+            }
+        } catch (error) {
+            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
+            console.error('Error loading user data:', error);
+        } finally {
+            this.loading(false);
+            m.redraw();
+        }
+    }
+
+    getBaseUrl() {
+        return app.forum.attribute('baseUrl');
+    }
+
+    formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+
+        if (diffInSeconds < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.just_now');
+        }
+
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.minutes_ago', { count: diffInMinutes });
+        }
+
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) {
+            return app.translator.trans('lewuocvi-knoxextchecker.forum.hours_ago', { count: diffInHours });
+        }
+
+        return date.toLocaleString();
+    }
+
     async checkImei(e) {
         e.preventDefault();
 
@@ -58,9 +122,8 @@ export default class CheckImeiPage extends Page {
         this.loading(true);
 
         // Check if the user is logged in
-        if (!app.session.user) {
-            this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.login_required'));
-            return;
+        if (!this.getUser()) {
+            return this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.login_required'));
         }
 
         try {
@@ -128,6 +191,41 @@ export default class CheckImeiPage extends Page {
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+                        )
+                    }
+
+                    {
+                        this.wallet() && (
+                            <div className="UserInfo">
+                                <table className="WalletDetails">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan="2">
+                                                <div className='WalletDetailTitle'>
+                                                    <p>{this.user().email}</p>
+                                                    <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            [
+                                                { label: 'service_price', value: this.servicePrice() },
+                                                { label: 'total_deposited', value: this.wallet().total_deposited },
+                                                { label: 'total_used', value: this.wallet().total_used },
+                                                { label: 'balance', value: this.wallet().balance },
+                                                { label: 'wallet_updated_at', value: this.formatTimeAgo(new Date(this.wallet().updated_at)) }
+                                            ].map(item => (
+                                                <tr key={item.label}>
+                                                    <td>{app.translator.trans(`lewuocvi-knoxextchecker.forum.${item.label}`)}</td>
+                                                    <td>{item.label === 'wallet_updated_at' ? item.value : this.formatCurrency(item.value)}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
                         )
                     }

@@ -2,6 +2,7 @@
 
 namespace Samsungssl\KnoxChecker\Api\Controller;
 
+use Flarum\Settings\SettingsRepositoryInterface;
 use GuzzleHttp\Client;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,8 +27,9 @@ class BackEndProxy implements RequestHandlerInterface
 
                 $options = [
                     'headers' => [
+                        'user-agent' => $request->getHeaderLine('user-agent'),
                         'Content-Type' => 'application/json',
-                        'Accept-Language' => $request->getHeaderLine('accept-language'),
+                        'Accept-Language' => $this->getUserLanguage($request),
                         'forum-url' => $request->getHeaderLine('origin'),
                         'Forum-Cookie' => $request->getHeaderLine('cookie'),
                         'User-Data' => base64_encode(json_encode($user)),
@@ -49,5 +51,30 @@ class BackEndProxy implements RequestHandlerInterface
         } catch (\Exception $e) {
             return new JsonResponse(['status' => 'error', 'message' => $e->getMessage()]);
         }
+    }
+
+    public function getUserLanguage($request): string
+    {
+        // Lấy thông tin Actor (người dùng hiện tại hoặc khách)
+        $actor = $request->getAttribute('actor');
+
+        // Lấy cài đặt của hệ thống
+        $settings = app(SettingsRepositoryInterface::class);
+
+        // Lấy ngôn ngữ mặc định từ cài đặt hệ thống
+        $defaultLanguage = $settings->get('default_locale');
+
+        // Nếu người dùng không phải là khách, kiểm tra xem họ có ngôn ngữ riêng không
+        if (!$actor instanceof Guest) {
+            $userLanguage = $actor->getPreference('locale');
+
+            // Nếu người dùng có chọn ngôn ngữ, trả về ngôn ngữ đó
+            if ($userLanguage) {
+                return $userLanguage;
+            }
+        }
+
+        // Trả về ngôn ngữ mặc định nếu người dùng là khách hoặc chưa chọn ngôn ngữ
+        return $defaultLanguage;
     }
 }

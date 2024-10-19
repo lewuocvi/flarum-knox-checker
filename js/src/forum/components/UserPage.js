@@ -8,7 +8,6 @@ export default class UserPage extends Page {
         this.loading = Stream(true);
         this.user = null;
         this.error = null;
-        this.baseUrl = app.forum.attribute('baseUrl');
 
         if (app.session.user) {
             this.loadUserData();
@@ -45,6 +44,10 @@ export default class UserPage extends Page {
         } finally {
             m.redraw();
         }
+    }
+
+    getBaseUrl() {
+        return app.forum.attribute('baseUrl');
     }
 
     formatCurrency(amount) {
@@ -134,7 +137,7 @@ export default class UserPage extends Page {
                                     <th colSpan="2">
                                         <div className='WalletDetailTitle'>
                                             <p>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</p>
-                                            <a href={`${this.baseUrl}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                            <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
                                         </div>
                                     </th>
                                 </tr>
