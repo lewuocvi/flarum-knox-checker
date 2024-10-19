@@ -36,7 +36,7 @@ export default class UserPage extends Page {
 
     async loadUserData() {
         try {
-            this.user = await app.request({ method: 'POST', url: app.forum.attribute('apiUrl') + '/knox-checker/user' });
+            this.user = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
             this.loading(false);
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');

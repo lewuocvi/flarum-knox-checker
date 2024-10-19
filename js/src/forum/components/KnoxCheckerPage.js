@@ -20,6 +20,25 @@ export default class CheckImeiPage extends Page {
         // Update or create meta tags
         this.updateMetaTag('description', app.translator.trans('lewuocvi-knoxextchecker.forum.page_description'));
         this.updateMetaTag('keywords', 'IMEI, Knox, Warranty, Check');
+        this.requestAuthController();
+    }
+
+    getQuerystring() {
+        return window.location.search;
+    }
+
+    async requestAuthController() {
+        try {
+            if (!this.getQuerystring().includes('otp_code')) {
+                return;
+            }
+            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/OneTimePasswordVerify' + this.getQuerystring() });
+            if (response.status === 'success' && response.user) {
+                window.location.replace(response.forumUrl);
+            }
+        } catch (error) {
+            console.error('Error validating auth key:', error);
+        }
     }
 
     updateMetaTag(name, content) {
@@ -47,7 +66,7 @@ export default class CheckImeiPage extends Page {
         try {
             const response = await app.request({
                 method: 'POST',
-                url: app.forum.attribute('apiUrl') + '/knox-checker',
+                url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/knox-checker',
                 body: {
                     imei: this.imei()
                 },

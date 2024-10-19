@@ -65,8 +65,8 @@ export default class DepositPage extends Page {
         try {
             const response = await app.request({
                 method: 'POST',
-                url: `${app.forum.attribute('apiUrl')}/knox-checker/deposit`,
-                body: { action: 'generate', deposit_amount: this.depositAmount() }
+                url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/deposit',
+                body: { deposit_amount: this.depositAmount() }
             });
 
             if (response.status === 'success') {
@@ -97,8 +97,8 @@ export default class DepositPage extends Page {
                 this.loading(true);
             }
             const response = await app.request({
-                method: 'POST',
-                url: app.forum.attribute('apiUrl') + '/knox-checker/deposit',
+                method: 'GET',
+                url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/deposit',
                 body: { action: 'history', page: this.currentPage(), limit: 10 }
             });
 

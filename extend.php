@@ -12,6 +12,8 @@
 namespace Samsungssl\KnoxChecker;
 
 use Flarum\Extend;
+use Samsungssl\KnoxChecker\Api\Controller\BackEndProxy;
+use Samsungssl\KnoxChecker\Api\Controller\OneTimePasswordVerify;
 
 return [
 
@@ -25,7 +27,7 @@ return [
         ->route('/knox-checker/user', 'knox_checker:user'),
 
     (new Extend\Routes('api'))
-        ->post('/knox-checker', 'api_knox_checker', \Samsungssl\KnoxChecker\Api\Controller\CheckImeiController::class)
-        ->post('/knox-checker/user', 'api_knox_checker:user', \Samsungssl\KnoxChecker\Api\Controller\UserController::class)
-        ->post('/knox-checker/deposit', 'api_knox_checker:deposit_post', \Samsungssl\KnoxChecker\Api\Controller\DepositController::class),
+        ->GET('/extension/OneTimePasswordVerify', 'OneTimePasswordVerify:POST', OneTimePasswordVerify::class)
+        ->GET('/extension/proxy', 'API/BackEndProxy/GET', BackEndProxy::class)
+        ->post('/extension/proxy', 'API/BackEndProxy/POST', BackEndProxy::class),
 ];
