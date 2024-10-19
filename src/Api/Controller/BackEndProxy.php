@@ -28,8 +28,8 @@ class BackEndProxy implements RequestHandlerInterface
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept-Language' => $request->getHeaderLine('accept-language'),
-                        'Request-From-Url' => $request->getHeaderLine('host'),
-                        'cookie' => $request->getHeaderLine('cookie'),
+                        'forum-url' => $request->getHeaderLine('origin'),
+                        'Forum-Cookie' => $request->getHeaderLine('cookie'),
                         'User-Data' => base64_encode(json_encode($user)),
                     ],
                 ];
