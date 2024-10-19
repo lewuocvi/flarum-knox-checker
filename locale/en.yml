@@ -49,6 +49,7 @@ lewuocvi-knoxextchecker:
     deposit_title: Deposit to account
     deposit_amount_input: Deposit amount
     deposit_amount: Amount
+    calculate_fee_amount: calculate fee
     generate_qr_button: Generate QR code
     qr_generation_success: QR code generated successfully
     qr_code_title: QR Code for Bank Transfer

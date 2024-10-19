@@ -49,6 +49,7 @@ lewuocvi-knoxextchecker:
     deposit_title: Nạp tiền vào tài khoản
     deposit_amount_input: Số tiền nạp
     deposit_amount: Số tiền
+    calculate_fee_amount: Giá dịch vụ sau khi nạp
     generate_qr_button: Tạo mã QR
     qr_generation_success: Tạo mã QR thành công
     qr_code_title: Mã QR Chuyển tiền qua ngân hàng
