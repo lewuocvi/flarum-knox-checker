@@ -6,7 +6,8 @@ export default class UserPage extends Page {
     oninit(vnode) {
         super.oninit(vnode);
         this.loading = Stream(true);
-        this.user = null;
+        this.user = Stream(null);
+        this.wallet = Stream(null);
         this.error = null;
 
         if (app.session.user) {
@@ -35,13 +36,16 @@ export default class UserPage extends Page {
 
     async loadUserData() {
         try {
-            this.user = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
-            this.loading(false);
+            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
+
+            if (response.status === 'success') {
+                this.user(response.user);
+                this.wallet(response.wallet);
+            }
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
-            this.loading(false);
-            console.error('Error loading user data:', error);
         } finally {
+            this.loading(false);
             m.redraw();
         }
     }
@@ -81,86 +85,88 @@ export default class UserPage extends Page {
     }
 
     view() {
-        if (this.loading()) {
-            return <LoadingIndicator />;
-        }
-
-        if (this.error) {
-            return <div className="UserPage">{this.error}</div>;
-        }
-
-        if (!this.user || !this.user.user) {
-            return <div className="UserPage">{app.translator.trans('lewuocvi-knoxextchecker.forum.no_user_data')}</div>;
-        }
-
-        const { user, status } = this.user;
-        const { wallet } = user;
 
         return (
             <div className="UserPage">
+
+                {this.loading() && (
+                    <div className="LoadingOverlay">
+                        <LoadingIndicator size="large" />
+                    </div>
+                )}
+
                 <div className="container">
                     <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_page_title')}</h2>
                     <div className="UserInfo">
-                        <table className="UserDetails">
-                            <thead>
-                                <tr>
-                                    <th colSpan="2">{app.translator.trans('lewuocvi-knoxextchecker.forum.user_profile')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.name')}</td>
-                                    <td>{user.name}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.email')}</td>
-                                    <td>{user.email}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_id')}</td>
-                                    <td>{user.id}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.created_at')}</td>
-                                    <td>{this.formatTimeAgo(new Date(user.created_at))}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.updated_at')}</td>
-                                    <td>{this.formatTimeAgo(new Date(user.updated_at))}</td>
-                                </tr>
-                            </tbody>
-                        </table>
 
-                        <table className="WalletDetails">
-                            <thead>
-                                <tr>
-                                    <th colSpan="2">
-                                        <div className='WalletDetailTitle'>
-                                            <p>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</p>
-                                            <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_deposited')}</td>
-                                    <td>{this.formatCurrency(wallet.total_deposited)}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_used')}</td>
-                                    <td>{this.formatCurrency(wallet.total_used)}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.balance')}</td>
-                                    <td>{this.formatCurrency(wallet.balance)}</td>
-                                </tr>
-                                <tr>
-                                    <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_updated_at')}</td>
-                                    <td>{this.formatTimeAgo(new Date(wallet.updated_at))}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {
+                            this.user() && (
+                                <table className="UserDetails">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan="2">{app.translator.trans('lewuocvi-knoxextchecker.forum.user_profile')}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.name')}</td>
+                                            <td>{this.user().name}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.email')}</td>
+                                            <td>{this.user().email}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_id')}</td>
+                                            <td>{this.user().id}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.created_at')}</td>
+                                            <td>{this.formatTimeAgo(new Date(this.user().created_at))}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.updated_at')}</td>
+                                            <td>{this.formatTimeAgo(new Date(this.user().updated_at))}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            )
+                        }
+
+                        {
+                            this.wallet() && (
+                                <table className="WalletDetails">
+                                    <thead>
+                                        <tr>
+                                            <th colSpan="2">
+                                                <div className='WalletDetailTitle'>
+                                                    <p>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</p>
+                                                    <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_deposited')}</td>
+                                            <td>{this.formatCurrency(this.wallet().total_deposited)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_used')}</td>
+                                            <td>{this.formatCurrency(this.wallet().total_used)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.balance')}</td>
+                                            <td>{this.formatCurrency(this.wallet().balance)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_updated_at')}</td>
+                                            <td>{this.formatTimeAgo(new Date(this.wallet().updated_at))}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            )
+                        }
                     </div>
                 </div>
             </div>
