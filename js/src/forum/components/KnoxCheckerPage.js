@@ -142,11 +142,10 @@ export default class CheckImeiPage extends Page {
         try {
             this.loading(true);
             const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
-            console.log('User Data:', { response });
-            if (response.status === 'success' && response.user) {
+            if (response.status === 'success') {
                 this.user(response.user);
                 this.wallet(response.wallet);
-                this.servicePrice(response.costs_service);
+                this.costs(response.costs_service);
             }
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
