@@ -12,7 +12,7 @@ export default class CheckImeiPage extends Page {
         this.user = Stream(null);
         this.wallet = Stream(null);
         this.result = Stream(null);
-        this.servicePrice = Stream(0);
+        this.costs = Stream(20000);
     }
 
     oncreate(vnode) {
@@ -62,25 +62,6 @@ export default class CheckImeiPage extends Page {
         metaTag.content = content;
     }
 
-    async loadUserData() {
-        try {
-            this.loading(true);
-            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
-            console.log('User Data:', { response });
-            if (response.status === 'success' && response.user) {
-                this.user(response.user);
-                this.wallet(response.user.wallet);
-                this.servicePrice(response.service_price ?? 0);
-            }
-        } catch (error) {
-            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
-            console.error('Error loading user data:', error);
-        } finally {
-            this.loading(false);
-            m.redraw();
-        }
-    }
-
     getBaseUrl() {
         return app.forum.attribute('baseUrl');
     }
@@ -113,6 +94,11 @@ export default class CheckImeiPage extends Page {
         }
 
         return date.toLocaleString();
+    }
+
+    handleError(message) {
+        this.result({ status: 'error', message });
+        this.loading(false);
     }
 
     async checkImei(e) {
@@ -152,15 +138,28 @@ export default class CheckImeiPage extends Page {
         }
     }
 
-    handleError(message) {
-        this.result({ status: 'error', message });
-        this.loading(false);
+    async loadUserData() {
+        try {
+            this.loading(true);
+            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
+            console.log('User Data:', { response });
+            if (response.status === 'success' && response.user) {
+                this.user(response.user);
+                this.wallet(response.wallet);
+                this.servicePrice(response.costs_service);
+            }
+        } catch (error) {
+            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
+            console.error('Error loading user data:', error);
+        } finally {
+            this.loading(false);
+            m.redraw();
+        }
     }
 
     view() {
         return (
             <div className="CheckImeiPage">
-
                 {
                     this.loading() && (
                         <div className="LoadingOverlay">
@@ -196,6 +195,21 @@ export default class CheckImeiPage extends Page {
                     }
 
                     {
+                        this.result() && (
+                            <div className="Result">
+                                {
+                                    this.result().status === 'error' && (
+                                        <div className='ResultError'>
+                                            <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h2>
+                                            <p>{this.result().message}</p>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        )
+                    }
+
+                    {
                         this.wallet() && (
                             <div className="UserInfo">
                                 <table className="WalletDetails">
@@ -212,7 +226,7 @@ export default class CheckImeiPage extends Page {
                                     <tbody>
                                         {
                                             [
-                                                { label: 'service_price', value: this.servicePrice() },
+                                                { label: 'costs', value: this.costs() },
                                                 { label: 'total_deposited', value: this.wallet().total_deposited },
                                                 { label: 'total_used', value: this.wallet().total_used },
                                                 { label: 'balance', value: this.wallet().balance },
@@ -229,24 +243,7 @@ export default class CheckImeiPage extends Page {
                             </div>
                         )
                     }
-
-                    {
-                        this.result() && (
-                            <div className="Result">
-                                {
-                                    this.result().status === 'error' && (
-                                        <div className='ResultError'>
-                                            <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.error_title')}</h2>
-                                            <p>{this.result().message}</p>
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        )
-                    }
-
                 </div>
-
             </div>
         );
     }
