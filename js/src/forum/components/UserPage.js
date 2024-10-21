@@ -8,6 +8,7 @@ export default class UserPage extends Page {
         this.loading = Stream(true);
         this.user = Stream(null);
         this.wallet = Stream(null);
+        this.costs = Stream(20000);
         this.error = null;
 
         if (app.session.user) {
@@ -37,10 +38,10 @@ export default class UserPage extends Page {
     async loadUserData() {
         try {
             const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
-
             if (response.status === 'success') {
                 this.user(response.user);
                 this.wallet(response.wallet);
+                this.costs(response.costs_service);
             }
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
@@ -98,7 +99,6 @@ export default class UserPage extends Page {
                 <div className="container">
                     <h2>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_page_title')}</h2>
                     <div className="UserInfo">
-
                         {
                             this.user() && (
                                 <table className="UserDetails">
@@ -108,26 +108,18 @@ export default class UserPage extends Page {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.name')}</td>
-                                            <td>{this.user().name}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.email')}</td>
-                                            <td>{this.user().email}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.user_id')}</td>
-                                            <td>{this.user().id}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.created_at')}</td>
-                                            <td>{this.formatTimeAgo(new Date(this.user().created_at))}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.updated_at')}</td>
-                                            <td>{this.formatTimeAgo(new Date(this.user().updated_at))}</td>
-                                        </tr>
+                                        {[
+                                            { label: 'name', value: this.user().name },
+                                            { label: 'email', value: this.user().email },
+                                            { label: 'user_id', value: this.user().id },
+                                            { label: 'created_at', value: this.formatTimeAgo(new Date(this.user().created_at)) },
+                                            { label: 'updated_at', value: this.formatTimeAgo(new Date(this.user().updated_at)) }
+                                        ].map(attr => (
+                                            <tr key={attr.label}>
+                                                <td>{app.translator.trans(`lewuocvi-knoxextchecker.forum.${attr.label}`)}</td>
+                                                <td>{attr.value}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             )
@@ -141,28 +133,24 @@ export default class UserPage extends Page {
                                             <th colSpan="2">
                                                 <div className='WalletDetailTitle'>
                                                     <p>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_info')}</p>
-                                                    <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                                    <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i className="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
                                                 </div>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_deposited')}</td>
-                                            <td>{this.formatCurrency(this.wallet().total_deposited)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.total_used')}</td>
-                                            <td>{this.formatCurrency(this.wallet().total_used)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.balance')}</td>
-                                            <td>{this.formatCurrency(this.wallet().balance)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{app.translator.trans('lewuocvi-knoxextchecker.forum.wallet_updated_at')}</td>
-                                            <td>{this.formatTimeAgo(new Date(this.wallet().updated_at))}</td>
-                                        </tr>
+                                        {[
+                                            { label: 'costs', value: this.formatCurrency(this.costs()) },
+                                            { label: 'total_deposited', value: this.formatCurrency(this.wallet().total_deposited) },
+                                            { label: 'total_used', value: this.formatCurrency(this.wallet().total_used) },
+                                            { label: 'balance', value: this.formatCurrency(this.wallet().balance) },
+                                            { label: 'wallet_updated_at', value: this.formatTimeAgo(new Date(this.wallet().updated_at)) }
+                                        ].map(attr => (
+                                            <tr key={attr.label}>
+                                                <td>{app.translator.trans(`lewuocvi-knoxextchecker.forum.${attr.label}`)}</td>
+                                                <td>{attr.value}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             )

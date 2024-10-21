@@ -9,7 +9,7 @@ lewuocvi-knoxextchecker:
     knox_result_title: Kết quả kiểm tra knox
     imei_input: IMEI có 15 ký tự | ví dụ 357301902793356
     check_button: Kiểm Tra
-    service_price: Giá dịch vụ
+    costs: Giá dịch vụ
     option_knox_warranty_care: "THÔNG TIN KNOX + THÔNG TIN BẢO HÀNH + THÔNG TIN CARE+"
     option_warranty: "THÔNG TIN BẢO HÀNH"
     option_careplus: "THÔNG TIN CARE+"

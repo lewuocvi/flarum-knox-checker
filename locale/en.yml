@@ -9,7 +9,7 @@ lewuocvi-knoxextchecker:
     knox_result_title: Knox check result
     imei_input: IMEI has 15 characters | example 357301902793356
     check_button: Check
-    service_price: Service price
+    costs: Service price
     option_knox_warranty_care: "KNOX INFORMATION + WARRANTY INFORMATION + CARE+ INFORMATION"
     option_warranty: "WARRANTY INFORMATION"
     option_careplus: "CARE+ INFORMATION"
