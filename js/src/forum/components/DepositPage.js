@@ -103,7 +103,7 @@ export default class DepositPage extends Page {
                     id: deposit.id,
                     date: this.formatTimeAgo(new Date(deposit.created_at)),
                     amount: deposit.amount,
-                    detail: deposit.description
+                    detail: deposit.content
                 })));
 
                 this.currentPage(response.current_page);
