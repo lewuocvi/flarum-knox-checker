@@ -67,6 +67,8 @@ lewuocvi-knoxextchecker:
     minutes_ago: "{count} phút trước"
     hours_ago: "{count} giờ trước"
 
+    plan_price: Giá bán
+
   api:
     error_guest: "Bạn cần đăng nhập để kiểm tra IMEI."
     error_invalid_imei: "IMEI không hợp lệ. Vui lòng nhập lại."

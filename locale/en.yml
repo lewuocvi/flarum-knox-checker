@@ -67,6 +67,8 @@ lewuocvi-knoxextchecker:
     minutes_ago: "{count} minute(s) ago"
     hours_ago: "{count} hour(s) ago"
 
+    plan_price: selling price
+
   api:
     error_guest: "You need to log in to check IMEI."
     error_invalid_imei: "Invalid IMEI. Please enter again."

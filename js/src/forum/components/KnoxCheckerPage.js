@@ -13,6 +13,7 @@ export default class CheckImeiPage extends Page {
         this.wallet = Stream(null);
         this.result = Stream(null);
         this.costs = Stream(20000);
+        this.servicePlans = Stream(null);
     }
 
     oncreate(vnode) {
@@ -23,29 +24,19 @@ export default class CheckImeiPage extends Page {
         // Update or create meta tags
         this.updateMetaTag('description', app.translator.trans('lewuocvi-knoxextchecker.forum.page_description'));
         this.updateMetaTag('keywords', 'IMEI, Knox, Warranty, Check');
-        this.requestAuthController();
-
-        if (this.getUser()) {
-            this.loadUserData();
-        }
+        this.oneTimePasswordVerify();
+        this.loadServicePlans();
+        this.loadUserData();
     }
 
-    getQuerystring() {
-        return window.location.search;
-    }
-
-    getUser() {
-        return app.session.user;
-    }
-
-    async requestAuthController() {
+    async oneTimePasswordVerify() {
         try {
-            if (!this.getQuerystring().includes('otp_code')) {
-                return;
-            }
-            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/OneTimePasswordVerify' + this.getQuerystring() });
-            if (response.status === 'success' && response.user) {
-                window.location.replace(response.forumUrl);
+            const params = window.location.search;
+            if (params.includes('otp_code')) {
+                const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/OneTimePasswordVerify' + params });
+                if (response.status === 'success' && response.user) {
+                    window.location.replace(response.forumUrl);
+                }
             }
         } catch (error) {
             console.error('Error validating auth key:', error);
@@ -60,10 +51,6 @@ export default class CheckImeiPage extends Page {
             document.head.appendChild(metaTag);
         }
         metaTag.content = content;
-    }
-
-    getBaseUrl() {
-        return app.forum.attribute('baseUrl');
     }
 
     formatCurrency(amount) {
@@ -108,14 +95,14 @@ export default class CheckImeiPage extends Page {
         this.loading(true);
 
         // Check if the user is logged in
-        if (!this.getUser()) {
+        if (!app.session.user) {
             return this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.login_required'));
         }
 
         try {
             const response = await app.request({
                 method: 'POST',
-                url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/knox-checker',
+                url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/KnoxV3Controller',
                 body: {
                     imei: this.imei()
                 },
@@ -125,10 +112,13 @@ export default class CheckImeiPage extends Page {
 
             this.result(response);
 
-            if (response && response.id) {
-                location.href = `${app.forum.attribute('baseUrl')}/d/${response.id}`;
-            } else {
-                console.error('No ID returned from API response');
+            if (response.status === 'success' && response.data) {
+                const { title, content, discussions } = response.data;
+                if (title && content && discussions) {
+                    location.href = `${app.forum.attribute('baseUrl')}/d/${discussions.id}`;
+                } else {
+                    console.error('No ID returned from API response');
+                }
             }
         } catch (error) {
             this.handleError(app.translator.trans('lewuocvi-knoxextchecker.forum.error_occurred'));
@@ -140,6 +130,9 @@ export default class CheckImeiPage extends Page {
 
     async loadUserData() {
         try {
+            if (!app.session.user) {
+                return;
+            }
             this.loading(true);
             const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/user' });
             if (response.status === 'success') {
@@ -149,7 +142,22 @@ export default class CheckImeiPage extends Page {
             }
         } catch (error) {
             this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_user_data');
-            console.error('Error loading user data:', error);
+        } finally {
+            this.loading(false);
+            m.redraw();
+        }
+    }
+
+    async loadServicePlans() {
+        try {
+            this.loading(true);
+            const response = await app.request({ method: 'GET', url: app.forum.attribute('apiUrl') + '/extension/proxy?url=https://samsungssl.com/extension/PlanController' });
+            console.log('loadServicePlans: ', response);
+            if (response.status === 'success') {
+                this.servicePlans(response.data);
+            }
+        } catch (error) {
+            this.error = app.translator.trans('lewuocvi-knoxextchecker.forum.error_loading_service_plans');
         } finally {
             this.loading(false);
             m.redraw();
@@ -217,7 +225,7 @@ export default class CheckImeiPage extends Page {
                                             <th colSpan="2">
                                                 <div className='WalletDetailTitle'>
                                                     <p>{this.user().email}</p>
-                                                    <a href={`${this.getBaseUrl()}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
+                                                    <a href={`${app.forum.attribute('baseUrl')}/knox-checker/deposit`}> <i class="fas fa-dollar-sign"></i> {app.translator.trans('lewuocvi-knoxextchecker.forum.deposit_money')}</a>
                                                 </div>
                                             </th>
                                         </tr>
@@ -239,6 +247,22 @@ export default class CheckImeiPage extends Page {
                                         }
                                     </tbody>
                                 </table>
+                            </div>
+                        )
+                    }
+
+                    {
+                        this.servicePlans() && (
+                            <div className="ServicePlans">
+                                {this.servicePlans().map(plan => (
+                                    <div key={plan.id} className="PlanCard">
+                                        <div className="PlanTitle">{plan.name}</div>
+                                        <div className="PlanContent">
+                                            <div className="PlanDescription"><p>{plan.description}</p></div>
+                                        </div>
+                                        <div className="PlanPrice">{app.translator.trans('lewuocvi-knoxextchecker.forum.plan_price')}: {this.formatCurrency(plan.price)}</div>
+                                    </div>
+                                ))}
                             </div>
                         )
                     }

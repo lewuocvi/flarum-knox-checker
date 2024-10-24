@@ -238,6 +238,67 @@
     }
 }
 
+.ServicePlans {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .PlanCard {
+        background-color: #edf2f7; // Consistent background color
+        border: 1px solid #e0e0e0; // Consistent border color
+        box-shadow: 0 2px 4px rgba(77, 105, 142, 0.1); // Consistent box-shadow
+        flex: 1 1 calc(50% - 20px);
+        box-sizing: border-box;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        margin: 2px; // Spacing between cards
+
+        &:hover {
+            transform: translateY(-5px); // Noticeable hover effect
+        }
+
+        .PlanTitle {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background-color: #4D698E; // Consistent background color
+            color: #ffffff; // Consistent text color
+            text-transform: uppercase;
+            text-align: left;
+            padding: 10px;
+            white-space: nowrap;
+        }
+
+        .PlanContent {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            padding-bottom: 30px;
+
+            .PlanDescription {
+                font-size: 0.9em;
+                margin: 2px;
+                flex-grow: 1;
+            }
+        }
+
+        .PlanPrice {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #4D698E; // Consistent color
+        }
+    }
+
+    @media (max-width: 768px) {
+        .PlanCard {
+            flex: 1 1 100%;
+        }
+    }
+}
+
 .DepositPage {
     padding: 20px;
     background-color: #ffffff;
